@@ -2,6 +2,21 @@ import burger from "@/assets/hamburguesa-hero.jpg";
 import cocaCola500 from "@/assets/coca-cola-500.jpg";
 import cocaCola175 from "@/assets/coca-cola-175.jpg";
 import fanta500 from "@/assets/fanta-500.jpg";
+import goldenBurger from "../assets/GOLDEN BURGER.jpg";
+import napolitana from "../assets/NAPOLITANA.jpg";
+import cuartitoAle from "../assets/CUARTITO ALE.jpg";
+import hbq from "../assets/HBQ.jpg";
+import tukiBurger from "../assets/TUKI BURGER.jpg";
+import deluxeCrispy from "../assets/DELUXE CRISPY.jpg";
+import cheeseBurger from "../assets/CHEESE BURGER.jpg";
+import cheeseBacon from "../assets/CHEESE BACON.jpg";
+import laFitzRoy from "../assets/LA FITZ ROY.jpg";
+import bigMac from "../assets/BIG MAC.jpg";
+import notBurger from "../assets/NOT BURGER.jpg";
+import americanBurger from "../assets/AMERICAN BURGER.jpg";
+import sweetBurger from "../assets/SWEET BURGER.jpg";
+import baconJam from "../assets/BACON JAM.jpg";
+import sliders from "../assets/SLIDERS.jpg";
 
 export type MenuItem = {
   nombre: string;
@@ -50,21 +65,140 @@ export const menu: MenuCategory[] = [
     titulo: "HAMBURGUESAS",
     subtitulo: "Smasheadas, artesanales, hechas al momento.",
     items: [
-      { nombre: "GOLDEN BURGER", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "10% OFF", emoji: "🍔", img: burger },
-      { nombre: "NAPOLITANA", desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🔥 Popular", emoji: "🥓" },
-      { nombre: "CUARTITO ALE", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", emoji: "🌶️" },
-      { nombre: "HBQ", desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", emoji: "🍖" },
-      { nombre: "TUKI BURGER", desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", emoji: "🍳" },
-      { nombre: "DELUXE CRISPY", desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", emoji: "🧅" },
-      { nombre: "CHEESE BURGER", desc: "Pan de papa, salsa mil islas, carne smash x2 y cheddar x2. Incluye papas fritas.", precio: "$13.050", precioAnt: "$14.500", tag: "Doble + Papas", emoji: "🧀" },
-      { nombre: "CHEESE BACON", desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🥓 Bacon", emoji: "🥓" },
-      { nombre: "LA FITZ ROY", desc: "Pan de papa, cheddar x2, BBQ, lechuga, tomate, cebolla, panceta crocante, carne smash x2 y pickles.", precio: "$15.750", precioAnt: "$17.500", tag: "Premium", emoji: "⭐" },
-      { nombre: "BIG MAC", desc: "Pan de papa, cheddar x2, salsa big mac, lechuga, cebolla, carne smash x2 y pickles.", precio: "$15.750", precioAnt: "$17.500", tag: "Doble", emoji: "🍔" },
-      { nombre: "NOT BURGER", desc: "Pan de papa, cheddar x2, salsa mil islas, lechuga, tomate, cebolla brunoise y medallón veggie.", precio: "$13.050", precioAnt: "$14.500", tag: "🌱 Veggie", emoji: "🥬" },
-      { nombre: "AMERICAN BURGER", desc: "Pan de papa, salsa mil islas, lechuga, tomate, cebolla brunoise, carne smash y cheddar x2. Incluye papas fritas.", precio: "$13.050", precioAnt: "$14.500", tag: "Con Papas", emoji: "🇺🇸" },
-      { nombre: "SWEET BURGER", desc: "Pan de papa, salsa big mac, cebolla caramelizada con miel, carne smash y cheddar x2.", precio: "$13.050", precioAnt: "$14.500", tag: "Dulce", emoji: "🍯" },
-      { nombre: "BACON JAM", desc: "Pan de papa invertido, mermelada de bacon y cebolla caramelizada, queso dambo, queso cheddar, carne smash x2 y pickles.", precio: "$15.750", precioAnt: "$17.500", tag: "Premium", emoji: "🔥" },
-      { nombre: "SLIDERS", desc: "Pan de papa, cheddar y carne smash. Mini burger ideal para compartir.", precio: "$4.000", tag: "Mini", emoji: "🍔" },
+      {
+        nombre: "GOLDEN BURGER",
+        desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, panceta crocante, carne smash y pickles.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "10% OFF",
+        emoji: "🍔",
+        img: goldenBurger,
+      },
+      {
+        nombre: "NAPOLITANA",
+        desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "🔥 Popular",
+        emoji: "🍔",
+        img: napolitana,
+      },
+      {
+        nombre: "CUARTITO ALE",
+        desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Clásica",
+        emoji: "🍔",
+        img: cuartitoAle,
+      },
+      {
+        nombre: "HBQ",
+        desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "BBQ",
+        emoji: "🍔",
+        img: hbq,
+      },
+      {
+        nombre: "TUKI BURGER",
+        desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Con huevo",
+        emoji: "🍔",
+        img: tukiBurger,
+      },
+      {
+        nombre: "DELUXE CRISPY",
+        desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Crispy",
+        emoji: "🍔",
+        img: deluxeCrispy,
+      },
+      {
+        nombre: "CHEESE BURGER",
+        desc: "Pan de papa, salsa mil islas, carne smash x2 y cheddar x2. Incluye papas fritas.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Doble + Papas",
+        emoji: "🍔",
+        img: cheeseBurger,
+      },
+      {
+        nombre: "CHEESE BACON",
+        desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "🥓 Bacon",
+        emoji: "🍔",
+        img: cheeseBacon,
+      },
+      {
+        nombre: "LA FITZ ROY",
+        desc: "Pan de papa, cheddar x2, BBQ, lechuga, tomate, cebolla, panceta crocante, carne smash x2 y pickles.",
+        precio: "$15.750",
+        precioAnt: "$17.500",
+        tag: "Premium",
+        emoji: "🍔",
+        img: laFitzRoy,
+      },
+      {
+        nombre: "BIG MAC",
+        desc: "Pan de papa, cheddar x2, salsa big mac, lechuga, cebolla, carne smash x2 y pickles.",
+        precio: "$15.750",
+        precioAnt: "$17.500",
+        tag: "Doble",
+        emoji: "🍔",
+        img: bigMac,
+      },
+      {
+        nombre: "NOT BURGER",
+        desc: "Pan de papa, cheddar x2, salsa mil islas, lechuga, tomate, cebolla brunoise y medallón veggie.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "🌱 Veggie",
+        emoji: "🌱",
+        img: notBurger,
+      },
+      {
+        nombre: "AMERICAN BURGER",
+        desc: "Pan de papa, salsa mil islas, lechuga, tomate, cebolla brunoise, carne smash y cheddar x2. Incluye papas fritas.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Con Papas",
+        emoji: "🍔",
+        img: americanBurger,
+      },
+      {
+        nombre: "SWEET BURGER",
+        desc: "Pan de papa, salsa big mac, cebolla caramelizada con miel, carne smash y cheddar x2.",
+        precio: "$13.050",
+        precioAnt: "$14.500",
+        tag: "Dulce",
+        emoji: "🍔",
+        img: sweetBurger,
+      },
+      {
+        nombre: "BACON JAM",
+        desc: "Pan de papa invertido, mermelada de bacon y cebolla caramelizada, queso dambo, queso cheddar, carne smash x2 y pickles.",
+        precio: "$15.750",
+        precioAnt: "$17.500",
+        tag: "Premium",
+        emoji: "🍔",
+        img: baconJam,
+      },
+      {
+        nombre: "SLIDERS",
+        desc: "Pan de papa, cheddar y carne smash. Mini burger ideal para compartir.",
+        precio: "$4.000",
+        tag: "Mini",
+        emoji: "🍔",
+        img: sliders,
+      },
     ],
   },
   {
