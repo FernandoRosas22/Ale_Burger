@@ -1,22 +1,22 @@
 import burger from "@/assets/hamburguesa-hero.jpg";
-import cocaCola500 from "@/assets/coca-cola-500.jpg";
-import cocaCola175 from "@/assets/coca-cola-175.jpg";
-import fanta500 from "@/assets/fanta-500.jpg";
-import goldenBurger from "../assets/GOLDEN BURGER.jpg";
-import napolitana from "../assets/NAPOLITANA.jpg";
-import cuartitoAle from "../assets/CUARTITO ALE.jpg";
-import hbq from "../assets/HBQ.jpg";
-import tukiBurger from "../assets/TUKI BURGER.jpg";
-import deluxeCrispy from "../assets/DELUXE CRISPY.jpg";
-import cheeseBurger from "../assets/CHEESE BURGER.jpg";
-import cheeseBacon from "../assets/CHEESE BACON.jpg";
-import laFitzRoy from "../assets/LA FITZ ROY.jpg";
-import bigMac from "../assets/BIG MAC.jpg";
-import notBurger from "../assets/NOT BURGER.jpg";
-import americanBurger from "../assets/AMERICAN BURGER.jpg";
-import sweetBurger from "../assets/SWEET BURGER.jpg";
-import baconJam from "../assets/BACON JAM.jpg";
-import sliders from "../assets/SLIDERS.jpg";
+import cocaCola500 from "@/assets/COCA.COLA.500.jpg";
+import cocaCola175 from "@/assets/COCA.COLA.175.jpg";
+import fanta500 from "@/assets/FANTA.500.jpg";
+import goldenBurger from "@/assets/GOLDEN.BURGER.jpg";
+import napolitana from "@/assets/NAPOLITANA.jpg";
+import cuartitoAle from "@/assets/CUARTITO.ALE.jpg";
+import hbq from "@/assets/HBQ.jpg";
+import tukiBurger from "@/assets/TUKI.BURGER.jpg";
+import deluxeCrispy from "@/assets/DELUXE.CRISPY.jpg";
+import cheeseBurger from "@/assets/CHEESE.BURGER.jpg";
+import cheeseBacon from "@/assets/CHEESE.BACON.jpg";
+import laFitzRoy from "@/assets/LA.FITZ.ROY.jpg";
+import bigMac from "@/assets/BIG.MAC.jpg";
+import notBurger from "@/assets/NOT.BURGER.jpg";
+import americanBurger from "@/assets/AMERICAN.BURGER.jpg";
+import sweetBurger from "@/assets/SWEET.BURGER.jpg";
+import baconJam from "@/assets/BACON.JAM.jpg";
+import sliders from "@/assets/SLIDERS.jpg";
 
 export type MenuItem = {
   nombre: string;
@@ -24,7 +24,6 @@ export type MenuItem = {
   precio: string;
   precioAnt?: string;
   tag?: string;
-  emoji: string;
   destacado?: boolean;
   img?: string;
 };
@@ -46,8 +45,7 @@ export const menu: MenuCategory[] = [
         nombre: "3X2 BURGERS DOBLES",
         desc: "3 combos dobles al precio de 2. Combinalas como quieras. Incluyen papas fritas.",
         precio: "$35.000",
-        tag: "🔥 Top",
-        emoji: "🍔",
+        tag: "Top",
         destacado: true,
       },
       {
@@ -55,7 +53,6 @@ export const menu: MenuCategory[] = [
         desc: "1 burger doble (Cheese Burger o Cheese Bacon) + 1 porción de papas + 1 bebida 500ml.",
         precio: "$16.500",
         tag: "Combo",
-        emoji: "🍟",
         destacado: true,
       },
     ],
@@ -71,7 +68,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "10% OFF",
-        emoji: "🍔",
         img: goldenBurger,
       },
       {
@@ -79,8 +75,7 @@ export const menu: MenuCategory[] = [
         desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.",
         precio: "$13.050",
         precioAnt: "$14.500",
-        tag: "🔥 Popular",
-        emoji: "🍔",
+        tag: "Popular",
         img: napolitana,
       },
       {
@@ -89,7 +84,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Clásica",
-        emoji: "🍔",
         img: cuartitoAle,
       },
       {
@@ -98,7 +92,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "BBQ",
-        emoji: "🍔",
         img: hbq,
       },
       {
@@ -107,7 +100,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Con huevo",
-        emoji: "🍔",
         img: tukiBurger,
       },
       {
@@ -116,7 +108,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Crispy",
-        emoji: "🍔",
         img: deluxeCrispy,
       },
       {
@@ -125,7 +116,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Doble + Papas",
-        emoji: "🍔",
         img: cheeseBurger,
       },
       {
@@ -133,8 +123,7 @@ export const menu: MenuCategory[] = [
         desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.",
         precio: "$13.050",
         precioAnt: "$14.500",
-        tag: "🥓 Bacon",
-        emoji: "🍔",
+        tag: "Bacon",
         img: cheeseBacon,
       },
       {
@@ -143,7 +132,6 @@ export const menu: MenuCategory[] = [
         precio: "$15.750",
         precioAnt: "$17.500",
         tag: "Premium",
-        emoji: "🍔",
         img: laFitzRoy,
       },
       {
@@ -152,7 +140,6 @@ export const menu: MenuCategory[] = [
         precio: "$15.750",
         precioAnt: "$17.500",
         tag: "Doble",
-        emoji: "🍔",
         img: bigMac,
       },
       {
@@ -160,8 +147,7 @@ export const menu: MenuCategory[] = [
         desc: "Pan de papa, cheddar x2, salsa mil islas, lechuga, tomate, cebolla brunoise y medallón veggie.",
         precio: "$13.050",
         precioAnt: "$14.500",
-        tag: "🌱 Veggie",
-        emoji: "🌱",
+        tag: "Veggie",
         img: notBurger,
       },
       {
@@ -170,7 +156,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Con Papas",
-        emoji: "🍔",
         img: americanBurger,
       },
       {
@@ -179,7 +164,6 @@ export const menu: MenuCategory[] = [
         precio: "$13.050",
         precioAnt: "$14.500",
         tag: "Dulce",
-        emoji: "🍔",
         img: sweetBurger,
       },
       {
@@ -188,7 +172,6 @@ export const menu: MenuCategory[] = [
         precio: "$15.750",
         precioAnt: "$17.500",
         tag: "Premium",
-        emoji: "🍔",
         img: baconJam,
       },
       {
@@ -196,7 +179,6 @@ export const menu: MenuCategory[] = [
         desc: "Pan de papa, cheddar y carne smash. Mini burger ideal para compartir.",
         precio: "$4.000",
         tag: "Mini",
-        emoji: "🍔",
         img: sliders,
       },
     ],
@@ -206,9 +188,9 @@ export const menu: MenuCategory[] = [
     titulo: "BEBIDAS",
     subtitulo: "Para acompañar tu burger.",
     items: [
-      { nombre: "COCA COLA 500ml", desc: "Bebida clásica bien fría.", precio: "$2.500", tag: "Clásica", emoji: "🥤", img: cocaCola500 },
-      { nombre: "COCA COLA 1.75L", desc: "Ideal para compartir en familia.", precio: "$5.000", tag: "Familiar", emoji: "🧃", img: cocaCola175 },
-      { nombre: "FANTA 500ml", desc: "Naranja, refrescante y bien fría.", precio: "$2.500", tag: "Naranja", emoji: "🍊", img: fanta500 },
+      { nombre: "COCA COLA 500ml", desc: "Bebida clásica bien fría.", precio: "$2.500", tag: "Clásica", img: cocaCola500 },
+      { nombre: "COCA COLA 1.75L", desc: "Ideal para compartir en familia.", precio: "$5.000", tag: "Familiar", img: cocaCola175 },
+      { nombre: "FANTA 500ml", desc: "Naranja, refrescante y bien fría.", precio: "$2.500", tag: "Naranja", img: fanta500 },
     ],
   },
   {
@@ -216,10 +198,10 @@ export const menu: MenuCategory[] = [
     titulo: "PARA ACOMPAÑAR",
     subtitulo: "Sumá un extra a tu pedido.",
     items: [
-      { nombre: "PAPAS CHICAS", desc: "150grs de la mejor papa.", precio: "$2.700", precioAnt: "$3.000", tag: "10% OFF", emoji: "🍟" },
-      { nombre: "BANDEJA DE PAPAS", desc: "350grs de papas crocantes.", precio: "$5.400", precioAnt: "$6.000", tag: "Para compartir", emoji: "🍟" },
-      { nombre: "AROS DE CEBOLLA", desc: "10 aros de cebolla por bandeja (150grs).", precio: "$6.750", precioAnt: "$7.500", tag: "Crispy", emoji: "🧅" },
-      { nombre: "CHICKEN ALE", desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$14.400", precioAnt: "$16.000", tag: "🍗 Combo", emoji: "🍗" },
+      { nombre: "PAPAS CHICAS", desc: "150grs de la mejor papa.", precio: "$2.700", precioAnt: "$3.000", tag: "10% OFF" },
+      { nombre: "BANDEJA DE PAPAS", desc: "350grs de papas crocantes.", precio: "$5.400", precioAnt: "$6.000", tag: "Para compartir" },
+      { nombre: "AROS DE CEBOLLA", desc: "10 aros de cebolla por bandeja (150grs).", precio: "$6.750", precioAnt: "$7.500", tag: "Crispy" },
+      { nombre: "CHICKEN ALE", desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$14.400", precioAnt: "$16.000", tag: "Combo" },
     ],
   },
 ];
