@@ -1,0 +1,27 @@
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import MenuSection from "@/components/MenuSection";
+import VideosSection from "@/components/VideosSection";
+import LocationSection from "@/components/LocationSection";
+import OrderSection from "@/components/OrderSection";
+import SocialSection from "@/components/SocialSection";
+import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
+
+export default function Home() {
+  return (
+    <div className="ab">
+      <Navbar />
+      <Hero />
+      <About />
+      <MenuSection />
+      <VideosSection />
+      <LocationSection />
+      <OrderSection />
+      <SocialSection />
+      <Footer />
+      <WhatsAppFloat />
+    </div>
+  );
+}
