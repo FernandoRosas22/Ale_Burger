@@ -2,6 +2,7 @@ import burger from "@/assets/hamburguesa-hero.jpg";
 import cocaCola500 from "@/assets/coca-cola-500.jpg";
 import cocaCola175 from "@/assets/coca-cola-175.jpg";
 import fanta500 from "@/assets/fanta-500.jpg";
+import cuartitoale from "@/assets/CUARTITO.ALE.jpg";
 
 export type MenuItem = {
   nombre: string;
@@ -52,7 +53,7 @@ export const menu: MenuCategory[] = [
     items: [
       { nombre: "GOLDEN BURGER", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "10% OFF", emoji: "🍔", img: burger },
       { nombre: "NAPOLITANA", desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🔥 Popular", emoji: "🥓" },
-      { nombre: "CUARTITO ALE", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", emoji: "🌶️" },
+      { nombre: "CUARTITO ALE", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", emoji: "🌶️", img: cuartitoale },
       { nombre: "HBQ", desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", emoji: "🍖" },
       { nombre: "TUKI BURGER", desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", emoji: "🍳" },
       { nombre: "DELUXE CRISPY", desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", emoji: "🧅" },
