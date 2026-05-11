@@ -4,6 +4,11 @@ import cocaCola175 from "@/assets/coca-cola-175.jpg";
 import fanta500 from "@/assets/fanta-500.jpg";
 import cuartitoale from "@/assets/CUARTITO.ALE.jpg";
 import napolitana from "@/assets/NAPOLITANA.jpg";
+import hbq from "@/assets/HBQ.jpg";
+import tukiburger from "@/assets/TUKI.BURGER.jpg";
+import deluxecrispy from "@/assets/DELUXE.CRISPY.jpg";
+import cheeseburger from "@/assets/CHEESE.BURGER.jpg";
+import cheesebacon from "@/assets/CHEESE.BACON.jpg";
 
 export type MenuItem = {
   nombre: string;
@@ -55,11 +60,11 @@ export const menu: MenuCategory[] = [
       { nombre: "GOLDEN BURGER", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "10% OFF", emoji: "🍔", img: burger },
       { nombre: "NAPOLITANA", desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🔥 Popular", emoji: "🥓", img: napolitana },
       { nombre: "CUARTITO ALE", desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", emoji: "🌶️", img: cuartitoale },
-      { nombre: "HBQ", desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", emoji: "🍖" },
-      { nombre: "TUKI BURGER", desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", emoji: "🍳" },
-      { nombre: "DELUXE CRISPY", desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", emoji: "🧅" },
-      { nombre: "CHEESE BURGER", desc: "Pan de papa, salsa mil islas, carne smash x2 y cheddar x2. Incluye papas fritas.", precio: "$13.050", precioAnt: "$14.500", tag: "Doble + Papas", emoji: "🧀" },
-      { nombre: "CHEESE BACON", desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🥓 Bacon", emoji: "🥓" },
+      { nombre: "HBQ", desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", emoji: "🍖", img: hbq },
+      { nombre: "TUKI BURGER", desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", emoji: "🍳", img: tukiburger },
+      { nombre: "DELUXE CRISPY", desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.", precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", emoji: "🧅", img: deluxecrispy },
+      { nombre: "CHEESE BURGER", desc: "Pan de papa, salsa mil islas, carne smash x2 y cheddar x2. Incluye papas fritas.", precio: "$13.050", precioAnt: "$14.500", tag: "Doble + Papas", emoji: "🧀", img: cheeseburger },
+      { nombre: "CHEESE BACON", desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.", precio: "$13.050", precioAnt: "$14.500", tag: "🥓 Bacon", emoji: "🥓", img: cheesebacon },
       { nombre: "LA FITZ ROY", desc: "Pan de papa, cheddar x2, BBQ, lechuga, tomate, cebolla, panceta crocante, carne smash x2 y pickles.", precio: "$15.750", precioAnt: "$17.500", tag: "Premium", emoji: "⭐" },
       { nombre: "BIG MAC", desc: "Pan de papa, cheddar x2, salsa big mac, lechuga, cebolla, carne smash x2 y pickles.", precio: "$15.750", precioAnt: "$17.500", tag: "Doble", emoji: "🍔" },
       { nombre: "NOT BURGER", desc: "Pan de papa, cheddar x2, salsa mil islas, lechuga, tomate, cebolla brunoise y medallón veggie.", precio: "$13.050", precioAnt: "$14.500", tag: "🌱 Veggie", emoji: "🥬" },
