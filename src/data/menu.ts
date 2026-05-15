@@ -15,6 +15,7 @@ import notburger from "@/assets/NOT.BURGER.jpg";
 import americanburger from "@/assets/AMERICAN.BURGER.jpg";
 import sweetburger from "@/assets/SWEET.BURGER.jpg";
 import baconjam from "@/assets/BACON.JAM.jpg";
+import chickenale from "@7assets/CHICKEN.ALE.jpg";
 
 export type MenuItem = {
   nombre: string;
@@ -98,7 +99,7 @@ export const menu: MenuCategory[] = [
       { nombre: "PAPAS CHICAS", desc: "150grs de la mejor papa.", precio: "$2.700", precioAnt: "$3.000", tag: "10% OFF", emoji: "🍟" },
       { nombre: "BANDEJA DE PAPAS", desc: "350grs de papas crocantes.", precio: "$5.400", precioAnt: "$6.000", tag: "Para compartir", emoji: "🍟" },
       { nombre: "AROS DE CEBOLLA", desc: "10 aros de cebolla por bandeja (150grs).", precio: "$6.750", precioAnt: "$7.500", tag: "Crispy", emoji: "🧅" },
-      { nombre: "CHICKEN ALE", desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$14.400", precioAnt: "$16.000", tag: "🍗 Combo", emoji: "🍗" },
+      { nombre: "CHICKEN ALE", desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$14.400", precioAnt: "$16.000", tag: "🍗 Combo", emoji: "🍗", img: chickenale },
     ],
   },
 ];
