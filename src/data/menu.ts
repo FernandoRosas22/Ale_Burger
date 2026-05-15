@@ -54,6 +54,7 @@ export const menu: MenuCategory[] = [
         desc: "1 burger doble (Cheese Burger o Cheese Bacon) + 1 porción de papas + 1 bebida 500ml.",
         precio: "$16.500",
         tag: "Combo",
+        emoji: "🔥" ,
         img: "promomenucena",
         destacado: true,
       },
