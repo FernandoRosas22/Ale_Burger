@@ -15,7 +15,6 @@ import notburger from "@/assets/NOT.BURGER.jpg";
 import americanburger from "@/assets/AMERICAN.BURGER.jpg";
 import sweetburger from "@/assets/SWEET.BURGER.jpg";
 import baconjam from "@/assets/BACON.JAM.jpg";
-import promomenucena from "/@assets/PROMO.MENÚ.CENA.jpg;
 
 export type MenuItem = {
   nombre: string;
@@ -55,7 +54,6 @@ export const menu: MenuCategory[] = [
         precio: "$16.500",
         tag: "Combo",
         emoji: "🔥" ,
-        img: "promomenucena",
         destacado: true,
       },
     ],
