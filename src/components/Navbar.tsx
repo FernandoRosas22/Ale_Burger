@@ -1,6 +1,7 @@
 import { useState } from "react";
 import logo from "@/assets/logo.jpg";
 import { useScrolled } from "@/hooks/useScrolled";
+import { useCarrito } from "@/context/CarritoContext";
 
 const LINKS = [
   { href: "#nosotros", label: "Nosotros" },
@@ -14,6 +15,7 @@ export default function Navbar() {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+  const { totalItems, toggleCarrito } = useCarrito();
 
   return (
     <>
@@ -26,7 +28,20 @@ export default function Navbar() {
           {LINKS.map((l) => (
             <li key={l.href}><a href={l.href}>{l.label}</a></li>
           ))}
-          <li><a href="#pedidos" className="ab-nav-cta">🍔 Pedir ahora</a></li>
+          <li>
+            <button
+              className="carrito-nav-btn"
+              onClick={toggleCarrito}
+              aria-label={`Abrir carrito — ${totalItems} producto${totalItems !== 1 ? "s" : ""}`}
+            >
+              🛒 Carrito
+              {totalItems > 0 && (
+                <span className="carrito-badge" aria-hidden="true">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+          </li>
         </ul>
         <button
           className="ab-hamburger"
@@ -42,9 +57,16 @@ export default function Navbar() {
         {LINKS.map((l) => (
           <a key={l.href} href={l.href} onClick={close}>{l.label}</a>
         ))}
-        <a href="#pedidos" onClick={close} style={{ color: "var(--naranja)" }}>
-          🍔 Pedir ahora
-        </a>
+        <button
+          className="carrito-nav-btn"
+          onClick={() => { toggleCarrito(); close(); }}
+          style={{ fontSize: "1.1rem", padding: "14px 28px" }}
+        >
+          🛒 Mi carrito
+          {totalItems > 0 && (
+            <span className="carrito-badge" aria-hidden="true">{totalItems}</span>
+          )}
+        </button>
       </div>
     </>
   );

@@ -1,14 +1,26 @@
+import { useState } from "react";
 import type { MenuItem } from "@/data/menu";
-import { PEDIDOS_URL, whatsappLink } from "@/utils/contact";
+import { useCarrito, parsePrecio } from "@/context/CarritoContext";
 
 type Props = { item: MenuItem };
 
 export default function MenuCard({ item }: Props) {
-  const orderViaWhatsApp = () =>
-    window.open(
-      whatsappLink(`Hola AleBurgers! 🍔 Quiero pedir 1x ${item.nombre} (${item.precio}). ¿Está disponible?`),
-      "_blank",
-    );
+  const { agregarAlCarrito } = useCarrito();
+  const [agregado, setAgregado] = useState(false);
+
+  const handleAgregar = () => {
+    agregarAlCarrito({
+      id: item.nombre, // nombre como id único (son todos distintos)
+      nombre: item.nombre,
+      precio: parsePrecio(item.precio),
+      precioStr: item.precio,
+      imagen: item.img,
+      emoji: item.emoji,
+    });
+    // Feedback visual durante 1.2 segundos
+    setAgregado(true);
+    setTimeout(() => setAgregado(false), 1200);
+  };
 
   return (
     <article className={`ab-card ${item.destacado ? "ab-card-hot" : ""}`}>
@@ -30,10 +42,15 @@ export default function MenuCard({ item }: Props) {
           {item.tag && <span className="ab-tag-chip">{item.tag}</span>}
         </div>
         <div className="ab-card-actions">
-          <button className="ab-card-btn" onClick={orderViaWhatsApp}>🛒 WhatsApp</button>
-          <a className="ab-card-btn ab-card-btn-alt" href={PEDIDOS_URL} target="_blank" rel="noreferrer">
-            Pedir online
-          </a>
+          {/* Botón principal: agregar al carrito */}
+          <button
+            className={`btn-agregar-carrito${agregado ? " btn-agregar-carrito--agregado" : ""}`}
+            onClick={handleAgregar}
+            disabled={agregado}
+            aria-label={`Agregar ${item.nombre} al carrito`}
+          >
+            {agregado ? "✓ Agregado" : "🛒 Agregar al carrito"}
+          </button>
         </div>
       </div>
     </article>
