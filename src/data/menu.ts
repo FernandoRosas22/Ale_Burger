@@ -15,6 +15,7 @@ import notburger from "@/assets/NOT.BURGER.jpg";
 import americanburger from "@/assets/AMERICAN.BURGER.jpg";
 import sweetburger from "@/assets/SWEET.BURGER.jpg";
 import baconjam from "@/assets/BACON.JAM.jpg";
+import promomenucena from "/@assets/PROMO.MENÚ.CENA.jpg;
 
 export type MenuItem = {
   nombre: string;
@@ -53,7 +54,7 @@ export const menu: MenuCategory[] = [
         desc: "1 burger doble (Cheese Burger o Cheese Bacon) + 1 porción de papas + 1 bebida 500ml.",
         precio: "$16.500",
         tag: "Combo",
-        emoji: "🍟",
+        img: "promomenucena",
         destacado: true,
       },
     ],
