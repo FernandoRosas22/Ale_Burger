@@ -1,7 +1,24 @@
+import { useState } from "react";
 import { menu } from "@/data/menu";
+import type { MenuItem } from "@/data/menu";
 import MenuCard from "./MenuCard";
+import ProductModal from "./ProductModal";
 
 export default function MenuSection() {
+  const [itemSeleccionado, setItemSeleccionado] = useState<MenuItem | null>(null);
+  const [modalAbierto, setModalAbierto]         = useState(false);
+
+  const abrirModal = (item: MenuItem) => {
+    setItemSeleccionado(item);
+    setModalAbierto(true);
+  };
+
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    // Limpiamos el item con delay para no cortar la animación de cierre
+    setTimeout(() => setItemSeleccionado(null), 350);
+  };
+
   return (
     <section id="menu" className="ab-section">
       <div className="ab-menu-header">
@@ -29,7 +46,7 @@ export default function MenuSection() {
           <div className="ab-scroller">
             <div className="ab-scroller-track">
               {cat.items.map((it) => (
-                <MenuCard key={it.nombre} item={it} />
+                <MenuCard key={it.nombre} item={it} onAbrirModal={abrirModal} />
               ))}
             </div>
           </div>
@@ -39,6 +56,13 @@ export default function MenuSection() {
       <p className="ab-menu-disclaimer">
         * Precios y disponibilidad sujetos a cambios. Consultá por WhatsApp o pedí online.
       </p>
+
+      {/* Modal montado una sola vez, fuera del loop */}
+      <ProductModal
+        item={itemSeleccionado}
+        isOpen={modalAbierto}
+        onClose={cerrarModal}
+      />
     </section>
   );
 }

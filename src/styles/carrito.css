@@ -477,3 +477,30 @@
     width: 100%;
   }
 }
+
+/* ─── Personalización en ítem del carrito ──────────────────── */
+.carrito-item-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 5px;
+}
+
+.carrito-custom-tag {
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.carrito-custom-tag--sin {
+  color: #e05252;
+}
+
+.carrito-custom-tag--con {
+  color: #4caf82;
+}
+
+.carrito-custom-tag--obs {
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+}

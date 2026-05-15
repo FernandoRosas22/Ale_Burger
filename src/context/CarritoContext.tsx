@@ -4,16 +4,26 @@
 // ============================================================
 
 import { createContext, useContext, useReducer, useEffect, ReactNode } from "react";
+import type { Ingrediente, Extra, MenuItem } from "@/data/menu";
 
 // ─── Tipos ───────────────────────────────────────────────────
+export interface PersonalizacionItem {
+  ingredientesRemovidos: Ingrediente[];
+  extrasAgregados: Extra[];
+  observaciones: string;
+}
+
 export interface ProductoCarrito {
-  id: string;        // nombre usado como id único
+  cartId: string;      // id único por entrada en carrito (para soportar misma burger con distintas personalizaciones)
+  id: string;          // nombre del producto (id original)
   nombre: string;
-  precio: number;    // precio numérico (sin el $)
-  precioStr: string; // precio formateado original
+  precioBase: number;
+  precioUnitario: number; // precioBase + extras
+  precioStr: string;
   imagen?: string;
   emoji: string;
   cantidad: number;
+  personalizacion: PersonalizacionItem;
 }
 
 interface EstadoCarrito {
@@ -22,9 +32,9 @@ interface EstadoCarrito {
 }
 
 type AccionCarrito =
-  | { type: "AGREGAR"; producto: Omit<ProductoCarrito, "cantidad"> }
-  | { type: "QUITAR_UNO"; id: string }
-  | { type: "ELIMINAR"; id: string }
+  | { type: "AGREGAR"; item: ProductoCarrito }
+  | { type: "QUITAR_UNO"; cartId: string }
+  | { type: "ELIMINAR"; cartId: string }
   | { type: "VACIAR" }
   | { type: "TOGGLE_CARRITO" }
   | { type: "CERRAR_CARRITO" };
@@ -34,47 +44,46 @@ interface ContextoCarrito {
   abierto: boolean;
   totalItems: number;
   subtotal: number;
-  agregarAlCarrito: (producto: Omit<ProductoCarrito, "cantidad">) => void;
-  quitarUno: (id: string) => void;
-  eliminarItem: (id: string) => void;
+  agregarAlCarrito: (menuItem: MenuItem, personalizacion: PersonalizacionItem, cantidad: number, precioUnitario: number) => void;
+  quitarUno: (cartId: string) => void;
+  eliminarItem: (cartId: string) => void;
   vaciarCarrito: () => void;
   toggleCarrito: () => void;
   cerrarCarrito: () => void;
 }
 
 // ─── Reducer ─────────────────────────────────────────────────
-const STORAGE_KEY = "aleburgers_carrito";
+const STORAGE_KEY = "aleburgers_carrito_v2";
 
 function carritoReducer(estado: EstadoCarrito, accion: AccionCarrito): EstadoCarrito {
   switch (accion.type) {
-    case "AGREGAR": {
-      const existente = estado.items.find((i) => i.id === accion.producto.id);
-      const nuevosItems = existente
-        ? estado.items.map((i) =>
-            i.id === accion.producto.id ? { ...i, cantidad: i.cantidad + 1 } : i
-          )
-        : [...estado.items, { ...accion.producto, cantidad: 1 }];
-      return { ...estado, items: nuevosItems };
-    }
+    case "AGREGAR":
+      return { ...estado, items: [...estado.items, accion.item] };
+
     case "QUITAR_UNO": {
-      const item = estado.items.find((i) => i.id === accion.id);
+      const item = estado.items.find((i) => i.cartId === accion.cartId);
       if (!item) return estado;
       const nuevosItems =
         item.cantidad === 1
-          ? estado.items.filter((i) => i.id !== accion.id)
+          ? estado.items.filter((i) => i.cartId !== accion.cartId)
           : estado.items.map((i) =>
-              i.id === accion.id ? { ...i, cantidad: i.cantidad - 1 } : i
+              i.cartId === accion.cartId ? { ...i, cantidad: i.cantidad - 1 } : i
             );
       return { ...estado, items: nuevosItems };
     }
+
     case "ELIMINAR":
-      return { ...estado, items: estado.items.filter((i) => i.id !== accion.id) };
+      return { ...estado, items: estado.items.filter((i) => i.cartId !== accion.cartId) };
+
     case "VACIAR":
       return { ...estado, items: [] };
+
     case "TOGGLE_CARRITO":
       return { ...estado, abierto: !estado.abierto };
+
     case "CERRAR_CARRITO":
       return { ...estado, abierto: false };
+
     default:
       return estado;
   }
@@ -85,11 +94,10 @@ function cargarDesdeStorage(): EstadoCarrito {
   try {
     const guardado = localStorage.getItem(STORAGE_KEY);
     if (guardado) return { items: JSON.parse(guardado), abierto: false };
-  } catch { /* ignorar error de parse */ }
+  } catch { /* ignorar */ }
   return { items: [], abierto: false };
 }
 
-// Convierte string de precio "$13.050" → 13050
 export function parsePrecio(precioStr: string): number {
   return Number(precioStr.replace(/[$.]/g, "").replace(",", ".")) || 0;
 }
@@ -109,12 +117,10 @@ const CarritoContext = createContext<ContextoCarrito | null>(null);
 export function CarritoProvider({ children }: { children: ReactNode }) {
   const [estado, dispatch] = useReducer(carritoReducer, undefined, cargarDesdeStorage);
 
-  // Persistir en localStorage cada vez que cambien los items
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(estado.items));
   }, [estado.items]);
 
-  // Cerrar carrito con Escape
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") dispatch({ type: "CERRAR_CARRITO" });
@@ -123,14 +129,35 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // Bloquear scroll del body cuando el carrito está abierto
   useEffect(() => {
     document.body.style.overflow = estado.abierto ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [estado.abierto]);
 
   const totalItems = estado.items.reduce((acc, i) => acc + i.cantidad, 0);
-  const subtotal = estado.items.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
+  const subtotal   = estado.items.reduce((acc, i) => acc + i.precioUnitario * i.cantidad, 0);
+
+  const agregarAlCarrito = (
+    menuItem: MenuItem,
+    personalizacion: PersonalizacionItem,
+    cantidad: number,
+    precioUnitario: number
+  ) => {
+    const precioBase = parsePrecio(menuItem.precio);
+    const newItem: ProductoCarrito = {
+      cartId: crypto.randomUUID(),
+      id: menuItem.nombre,
+      nombre: menuItem.nombre,
+      precioBase,
+      precioUnitario,
+      precioStr: menuItem.precio,
+      imagen: menuItem.img,
+      emoji: menuItem.emoji,
+      cantidad,
+      personalizacion,
+    };
+    dispatch({ type: "AGREGAR", item: newItem });
+  };
 
   return (
     <CarritoContext.Provider
@@ -139,9 +166,9 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
         abierto: estado.abierto,
         totalItems,
         subtotal,
-        agregarAlCarrito: (producto) => dispatch({ type: "AGREGAR", producto }),
-        quitarUno: (id) => dispatch({ type: "QUITAR_UNO", id }),
-        eliminarItem: (id) => dispatch({ type: "ELIMINAR", id }),
+        agregarAlCarrito,
+        quitarUno: (cartId) => dispatch({ type: "QUITAR_UNO", cartId }),
+        eliminarItem: (cartId) => dispatch({ type: "ELIMINAR", cartId }),
         vaciarCarrito: () => dispatch({ type: "VACIAR" }),
         toggleCarrito: () => dispatch({ type: "TOGGLE_CARRITO" }),
         cerrarCarrito: () => dispatch({ type: "CERRAR_CARRITO" }),
