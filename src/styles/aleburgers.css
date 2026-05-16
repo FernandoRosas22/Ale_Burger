@@ -182,7 +182,7 @@ body {
 .ab-footer a { color: rgba(255,107,0,.6); }
 
 /* ===== WhatsApp flotante ===== */
-.ab-wsp-float { position: fixed; bottom: 32px; right: 32px; z-index: 900; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(37,211,102,.5); transition: transform .2s; }
+.ab-wsp-float { position: fixed; bottom: 32px; left: 32px; z-index: 900; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(37,211,102,.5); transition: transform .2s; }
 .ab-wsp-float:hover { transform: scale(1.12); }
 
 /* ===== RESPONSIVE ===== */
@@ -205,3 +205,9 @@ body {
   .ab-scroller-track > .ab-card { flex-basis: 82%; }
   .ab-videos-track > .ab-video-card { flex-basis: 70%; }
 }
+
+/* ─── Botón flotante carrito ──────────────────────────────────────────────── */
+.ab-carrito-float { position: fixed; bottom: 32px; right: 32px; z-index: 900; background: var(--naranja); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(255,107,0,.5); transition: transform .2s; border: none; cursor: pointer; }
+.ab-carrito-float:hover { transform: scale(1.12); }
+.ab-carrito-float-icon { font-size: 26px; line-height: 1; pointer-events: none; }
+.ab-carrito-float-badge { position: absolute; top: -4px; right: -4px; background: #fff; color: var(--naranja); font-size: 11px; font-weight: 900; min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0 3px; pointer-events: none; }

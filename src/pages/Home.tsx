@@ -8,6 +8,7 @@ import OrderSection from "@/components/OrderSection";
 import SocialSection from "@/components/SocialSection";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import CarritoFloat from "@/components/CarritoFloat";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <SocialSection />
       <Footer />
       <WhatsAppFloat />
+      <CarritoFloat />
     </div>
   );
 }

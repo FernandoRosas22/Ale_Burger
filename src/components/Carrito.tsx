@@ -1,10 +1,9 @@
 // ============================================================
-// Carrito.tsx — Panel lateral con checkout integrado
+// Carrito.tsx — Panel lateral
 // ============================================================
 
 import { useState } from "react";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
-import { whatsappLink } from "@/utils/contact";
 import CheckoutModal from "./CheckoutModal";
 
 export default function Carrito() {
@@ -19,22 +18,6 @@ export default function Carrito() {
   } = useCarrito();
 
   const [checkoutAbierto, setCheckoutAbierto] = useState(false);
-
-  const handleWhatsApp = () => {
-    if (items.length === 0) return;
-    const lineas = items.map((i) => {
-      const { ingredientesRemovidos, extrasAgregados, observaciones } = i.personalizacion;
-      let d = `• ${i.cantidad}x ${i.nombre} — ${formatPrecio(i.precioUnitario * i.cantidad)}`;
-      if (ingredientesRemovidos.length > 0)
-        d += `\n   🚫 Sin: ${ingredientesRemovidos.map((r) => r.nombre).join(", ")}`;
-      if (extrasAgregados.length > 0)
-        d += `\n   ➕ Con: ${extrasAgregados.map((e) => e.nombre).join(", ")}`;
-      if (observaciones) d += `\n   📝 ${observaciones}`;
-      return d;
-    });
-    const msg = `Hola AleBurgers! 🍔 Quiero hacer este pedido:\n\n${lineas.join("\n\n")}\n\n*Total: ${formatPrecio(subtotal)}*\n\n¿Está disponible?`;
-    window.open(whatsappLink(msg), "_blank");
-  };
 
   return (
     <>
@@ -150,17 +133,11 @@ export default function Carrito() {
             </div>
             <p className="carrito-footer-nota">* 10% OFF pagando en efectivo</p>
 
-            {/* CTA principal → checkout */}
             <button
               className="carrito-btn-pedido"
               onClick={() => setCheckoutAbierto(true)}
             >
               Finalizar pedido 🛵
-            </button>
-
-            {/* Alternativa rápida → WhatsApp */}
-            <button className="carrito-btn-wsp" onClick={handleWhatsApp}>
-              Pedir por WhatsApp 🟢
             </button>
 
             <button className="carrito-btn-vaciar" onClick={vaciarCarrito}>
@@ -170,7 +147,6 @@ export default function Carrito() {
         )}
       </aside>
 
-      {/* Checkout modal — fuera del aside para no tener z-index issues */}
       <CheckoutModal
         isOpen={checkoutAbierto}
         onClose={() => setCheckoutAbierto(false)}
