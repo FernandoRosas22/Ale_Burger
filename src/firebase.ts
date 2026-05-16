@@ -1,21 +1,15 @@
-// ============================================================
-// firebase.ts
-// Inicialización de Firebase — singleton seguro para Vite
-// ============================================================
-
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId:             import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyCx4n0Fj29i7rVVQx0SK0HfbJu2Cfy2lk0",
+  authDomain: "ale-burgers.firebaseapp.com",
+  projectId: "ale-burgers",
+  storageBucket: "ale-burgers.firebasestorage.app",
+  messagingSenderId: "643043021010",
+  appId: "1:643043021010:web:8fa2887e28be4253cd5d0b",
 };
 
-// Evita inicializar múltiples veces en hot-reload de Vite
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 export const db = getFirestore(app);
