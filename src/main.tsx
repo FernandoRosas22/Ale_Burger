@@ -5,6 +5,7 @@ import App from "./App";
 import "./styles/aleburgers.css";
 import "./styles/carrito.css";
 import "./styles/product-modal.css";
+import "./styles/checkout-modal.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

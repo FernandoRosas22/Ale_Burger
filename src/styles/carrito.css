@@ -504,3 +504,23 @@
   color: rgba(255, 255, 255, 0.45);
   font-style: italic;
 }
+
+/* ─── Botón WhatsApp secundario ────────────────────────────── */
+.carrito-btn-wsp {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: transparent;
+  color: #25D366;
+  border: 1.5px solid #25D366;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.18s, color 0.18s;
+}
+
+.carrito-btn-wsp:hover {
+  background: rgba(37, 211, 102, 0.1);
+}

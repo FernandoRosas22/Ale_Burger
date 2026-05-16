@@ -1,10 +1,11 @@
 // ============================================================
-// Carrito.tsx
-// Panel lateral del carrito con personalización de ítems
+// Carrito.tsx — Panel lateral con checkout integrado
 // ============================================================
 
+import { useState } from "react";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 import { whatsappLink } from "@/utils/contact";
+import CheckoutModal from "./CheckoutModal";
 
 export default function Carrito() {
   const {
@@ -17,27 +18,20 @@ export default function Carrito() {
     cerrarCarrito,
   } = useCarrito();
 
+  const [checkoutAbierto, setCheckoutAbierto] = useState(false);
+
   const handleWhatsApp = () => {
     if (items.length === 0) return;
-
     const lineas = items.map((i) => {
       const { ingredientesRemovidos, extrasAgregados, observaciones } = i.personalizacion;
-
-      let detalle = `• ${i.cantidad}x ${i.nombre} — ${formatPrecio(i.precioUnitario * i.cantidad)}`;
-
-      if (ingredientesRemovidos.length > 0) {
-        detalle += `\n   🚫 Sin: ${ingredientesRemovidos.map((r) => r.nombre).join(", ")}`;
-      }
-      if (extrasAgregados.length > 0) {
-        detalle += `\n   ➕ Con: ${extrasAgregados.map((e) => e.nombre).join(", ")}`;
-      }
-      if (observaciones) {
-        detalle += `\n   📝 ${observaciones}`;
-      }
-
-      return detalle;
+      let d = `• ${i.cantidad}x ${i.nombre} — ${formatPrecio(i.precioUnitario * i.cantidad)}`;
+      if (ingredientesRemovidos.length > 0)
+        d += `\n   🚫 Sin: ${ingredientesRemovidos.map((r) => r.nombre).join(", ")}`;
+      if (extrasAgregados.length > 0)
+        d += `\n   ➕ Con: ${extrasAgregados.map((e) => e.nombre).join(", ")}`;
+      if (observaciones) d += `\n   📝 ${observaciones}`;
+      return d;
     });
-
     const msg = `Hola AleBurgers! 🍔 Quiero hacer este pedido:\n\n${lineas.join("\n\n")}\n\n*Total: ${formatPrecio(subtotal)}*\n\n¿Está disponible?`;
     window.open(whatsappLink(msg), "_blank");
   };
@@ -79,13 +73,10 @@ export default function Carrito() {
               {items.map((item) => {
                 const { ingredientesRemovidos, extrasAgregados, observaciones } = item.personalizacion;
                 const tieneDetalle =
-                  ingredientesRemovidos.length > 0 ||
-                  extrasAgregados.length > 0 ||
-                  !!observaciones;
+                  ingredientesRemovidos.length > 0 || extrasAgregados.length > 0 || !!observaciones;
 
                 return (
                   <li key={item.cartId} className="carrito-item">
-                    {/* Imagen o emoji */}
                     <div className="carrito-item-img-wrap">
                       {item.imagen ? (
                         <img src={item.imagen} alt={item.nombre} className="carrito-item-img" loading="lazy" />
@@ -94,12 +85,10 @@ export default function Carrito() {
                       )}
                     </div>
 
-                    {/* Info */}
                     <div className="carrito-item-info">
                       <span className="carrito-item-nombre">{item.nombre}</span>
                       <span className="carrito-item-precio-unit">{formatPrecio(item.precioUnitario)} c/u</span>
 
-                      {/* Personalización */}
                       {tieneDetalle && (
                         <div className="carrito-item-custom">
                           {ingredientesRemovidos.length > 0 && (
@@ -121,7 +110,6 @@ export default function Carrito() {
                       )}
                     </div>
 
-                    {/* Controles cantidad */}
                     <div className="carrito-item-controles">
                       <button
                         className="carrito-btn-cantidad"
@@ -131,30 +119,18 @@ export default function Carrito() {
                       <span className="carrito-cantidad" aria-live="polite">{item.cantidad}</span>
                       <button
                         className="carrito-btn-cantidad"
-                        onClick={() => {
-                          // Para agregar más del mismo ítem ya personalizado, sumamos cantidad
-                          // dispatching QUITAR_UNO en negativo no existe, así lo hacemos desde fuera:
-                          // En este diseño, "+" en carrito = duplicar el mismo item con su personalización
-                          // Para simplicidad, solo sumamos uno más con el mismo cartId
-                          // La forma correcta es: dispatch UPDATE_CANTIDAD (no implementado aquí)
-                          // Alternativa: el usuario vuelve al menú y agrega de nuevo.
-                          // Por coherencia con el diseño actual, el "+" re-abre sería complejo;
-                          // dejamos solo quitar y eliminar en carrito, el usuario agrega desde el menú.
-                        }}
-                        aria-label={`Agregar otro ${item.nombre}`}
-                        style={{ opacity: 0.3, cursor: "not-allowed" }}
                         disabled
+                        style={{ opacity: 0.3, cursor: "not-allowed" }}
                         title="Para agregar más, usá el menú"
                       >+</button>
                     </div>
 
-                    {/* Subtotal + eliminar */}
                     <div className="carrito-item-subtotal">
                       <span>{formatPrecio(item.precioUnitario * item.cantidad)}</span>
                       <button
                         className="carrito-btn-eliminar"
                         onClick={() => eliminarItem(item.cartId)}
-                        aria-label={`Eliminar ${item.nombre} del carrito`}
+                        aria-label={`Eliminar ${item.nombre}`}
                         title="Eliminar"
                       >🗑</button>
                     </div>
@@ -173,15 +149,32 @@ export default function Carrito() {
               <strong>{formatPrecio(subtotal)}</strong>
             </div>
             <p className="carrito-footer-nota">* 10% OFF pagando en efectivo</p>
-            <button className="carrito-btn-pedido" onClick={handleWhatsApp}>
+
+            {/* CTA principal → checkout */}
+            <button
+              className="carrito-btn-pedido"
+              onClick={() => setCheckoutAbierto(true)}
+            >
+              Finalizar pedido 🛵
+            </button>
+
+            {/* Alternativa rápida → WhatsApp */}
+            <button className="carrito-btn-wsp" onClick={handleWhatsApp}>
               Pedir por WhatsApp 🟢
             </button>
+
             <button className="carrito-btn-vaciar" onClick={vaciarCarrito}>
               Vaciar carrito
             </button>
           </div>
         )}
       </aside>
+
+      {/* Checkout modal — fuera del aside para no tener z-index issues */}
+      <CheckoutModal
+        isOpen={checkoutAbierto}
+        onClose={() => setCheckoutAbierto(false)}
+      />
     </>
   );
 }
