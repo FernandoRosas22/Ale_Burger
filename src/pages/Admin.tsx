@@ -20,6 +20,7 @@ import {
   type EstadoPedido,
 } from "@/types/order.types";
 import "@/styles/admin.css";
+import { useAuth } from "@/context/AuthContext";
 
 // ─── Helpers ──────────────────────────────────────────────────
 function formatFecha(val: Timestamp | string | undefined): string {
@@ -136,6 +137,7 @@ function Comanda({ pedido, onCambiarEstado }: {
 
 // ─── Página Admin ─────────────────────────────────────────────
 export default function Admin() {
+  const { logout } = useAuth();
   const [pedidos, setPedidos]     = useState<(Pedido & { id: string })[]>([]);
   const [cargando, setCargando]   = useState(true);
   const [filtro, setFiltro]       = useState<EstadoPedido | "todos">("todos");
@@ -178,6 +180,7 @@ export default function Admin() {
       <header className="adm-topbar">
         <h1 className="adm-titulo">🍔 Comandas</h1>
         <span className="adm-total-badge">{pedidos.length} pedidos</span>
+        <button className="adm-logout-btn" onClick={logout} title="Cerrar sesión">Salir ↩</button>
       </header>
 
       {/* Filtros */}
