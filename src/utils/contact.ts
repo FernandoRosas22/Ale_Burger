@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = "5491172106298";
+export const WHATSAPP_NUMBER = "5491121581933";
 
 export const PEDIDOS_URL =
   "https://pedidos.masdelivery.com/aleburgers?utm_source=ig&utm_medium=social&utm_content=link_in_bio";
