@@ -1,0 +1,240 @@
+/* ============================================================
+   historial.css
+   ============================================================ */
+
+.hist-root {
+  min-height: 100vh;
+  background: #111;
+  color: #eee;
+  font-family: "Nunito", system-ui, sans-serif;
+}
+
+/* ─── Resumen global ──────────────────────────────────────── */
+.hist-global {
+  margin: 16px;
+  background: #1a1008;
+  border: 1.5px solid rgba(255,107,0,0.3);
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+.hist-global-titulo {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 6px;
+}
+
+.hist-global-monto {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: #ff6b00;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.hist-global-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hist-global-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px 16px;
+  min-width: 130px;
+}
+
+.hist-global-item span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.hist-global-item strong {
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+}
+
+/* ─── Grupos por día ──────────────────────────────────────── */
+.hist-grupos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hist-grupo-dia {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+/* ─── Tarjeta de cierre ───────────────────────────────────── */
+.hist-cierre {
+  background: #1c1c1c;
+  border: 1.5px solid #2a2a2a;
+  border-left: 3px solid #f0c000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hist-cierre-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #222;
+  border-bottom: 1px solid #2a2a2a;
+  gap: 12px;
+}
+
+.hist-cierre-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hist-cierre-icono { font-size: 28px; line-height: 1; }
+
+.hist-cierre-fecha {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.hist-cierre-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+.hist-cierre-total-grande {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: #ff6b00;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+/* ─── Breakdown pago ──────────────────────────────────────── */
+.hist-breakdown {
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-bottom: 1px solid #242424;
+}
+
+.hist-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+
+.hist-breakdown-row strong { color: #fff; font-size: 14px; }
+.hist-breakdown-row--efectivo strong   { color: #4caf82; }
+.hist-breakdown-row--transferencia strong { color: #60a5fa; }
+.hist-breakdown-row--desc { color: #f0c000; font-size: 12px; }
+.hist-cant { font-size: 11px; color: rgba(255,255,255,0.35); margin-left: 4px; }
+
+/* ─── Top items ───────────────────────────────────────────── */
+.hist-top {
+  padding: 10px 16px;
+  border-bottom: 1px solid #242424;
+}
+
+.hist-top-titulo {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 7px;
+}
+
+.hist-top-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  padding: 2px 0;
+}
+
+.hist-top-cant {
+  font-weight: 800;
+  color: #ff6b00;
+}
+
+/* ─── Detalle pedidos ─────────────────────────────────────── */
+.hist-detalle { padding: 0; }
+
+.hist-detalle-summary {
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.15s;
+}
+
+.hist-detalle-summary:hover { color: rgba(255,255,255,0.6); }
+.hist-detalle-summary::-webkit-details-marker { display: none; }
+
+.hist-pedidos-lista {
+  border-top: 1px solid #242424;
+  display: flex;
+  flex-direction: column;
+}
+
+.hist-pedido-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 16px;
+  border-bottom: 1px solid #1e1e1e;
+  gap: 12px;
+}
+
+.hist-pedido-row:last-child { border-bottom: none; }
+
+.hist-pedido-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.hist-pedido-nombre { font-size: 12px; font-weight: 800; color: #ddd; }
+
+.hist-pedido-detalle { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+.hist-pedido-meta { font-size: 10px; color: rgba(255,255,255,0.3); }
+
+.hist-pedido-total {
+  font-size: 13px;
+  font-weight: 900;
+  color: #ff6b00;
+  flex-shrink: 0;
+}
+
+/* ─── Desktop ─────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .hist-global { margin: 16px 20px; }
+  .hist-global-monto { font-size: 52px; }
+  .hist-grupos { padding: 0 4px; }
+}
