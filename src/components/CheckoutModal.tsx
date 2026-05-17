@@ -26,13 +26,15 @@ interface CheckoutModalProps {
 function validar(form: FormCheckout): ErroresCheckout {
   const errores: ErroresCheckout = {};
   if (!form.nombre.trim()) errores.nombre = "El nombre es obligatorio";
-  if (!form.telefono.trim()) {
-    errores.telefono = "El teléfono es obligatorio";
-  } else if (!/^[\d\s\-+()]{7,20}$/.test(form.telefono.trim())) {
-    errores.telefono = "Ingresá un teléfono válido";
-  }
-  if (form.tipoEntrega === "delivery" && !form.direccion.trim()) {
-    errores.direccion = "La dirección es obligatoria para delivery";
+  if (form.tipoEntrega === "delivery") {
+    if (!form.telefono.trim()) {
+      errores.telefono = "El teléfono es obligatorio";
+    } else if (!/^[\d\s\-+()]{7,20}$/.test(form.telefono.trim())) {
+      errores.telefono = "Ingresá un teléfono válido";
+    }
+    if (!form.direccion.trim()) {
+      errores.direccion = "La dirección es obligatoria para delivery";
+    }
   }
   return errores;
 }
@@ -306,9 +308,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 ID: <code>{pedidoId.slice(0, 8).toUpperCase()}</code>
               </p>
             )}
-            <p className="co-exito-sub">
-              Nos comunicaremos al <strong>{form.telefono}</strong> para confirmar.
-            </p>
+            {form.tipoEntrega === "delivery" && form.telefono && (
+              <p className="co-exito-sub">
+                Nos comunicaremos al <strong>{form.telefono}</strong> para confirmar.
+              </p>
+            )}
             <button className="co-btn-confirmar" onClick={onClose}>
               ¡Perfecto! 🍔
             </button>
