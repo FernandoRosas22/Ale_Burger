@@ -191,7 +191,8 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 {errores.nombre && <span className="co-error">{errores.nombre}</span>}
               </div>
 
-              {/* ── Teléfono ── */}
+              {/* ── Teléfono (solo delivery) ── */}
+              {form.tipoEntrega === "delivery" && (
               <div className="co-field-group">
                 <label className="co-label" htmlFor="co-telefono">Teléfono *</label>
                 <input
@@ -205,6 +206,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 />
                 {errores.telefono && <span className="co-error">{errores.telefono}</span>}
               </div>
+              )}
 
               {/* ── Dirección (solo delivery) ── */}
               {form.tipoEntrega === "delivery" && (
