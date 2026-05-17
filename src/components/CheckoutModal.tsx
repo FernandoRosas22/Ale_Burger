@@ -170,7 +170,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                       onClick={() => setField("tipoEntrega", tipo)}
                       type="button"
                     >
-                      {tipo === "delivery" ? "🛵 Delivery" : "🏠 Retiro en local"}
+                      {tipo === "delivery" ? "🛵 Delivery" : "🥡 Takeaway"}
                     </button>
                   ))}
                 </div>

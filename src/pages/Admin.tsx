@@ -91,7 +91,7 @@ function Comanda({ pedido, onCambiarEstado }: {
         <span className="cmd-nombre">{pedido.cliente?.nombre ?? "—"}</span>
         <span className="cmd-tel">{pedido.cliente?.telefono ?? "—"}</span>
         <span className="cmd-entrega">
-          {pedido.cliente?.tipoEntrega === "delivery" ? "🛵 Delivery" : "🏠 Retiro"}
+          {pedido.cliente?.tipoEntrega === "delivery" ? "🛵 Delivery" : "🥡 Takeaway"}
           {pago && <> · {pago.emoji} {pago.label}</>}
         </span>
         {pedido.cliente?.tipoEntrega === "delivery" && pedido.cliente?.direccion && (

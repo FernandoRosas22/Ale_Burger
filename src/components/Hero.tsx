@@ -9,8 +9,7 @@ export default function Hero() {
           Hamburguesas artesanales con sabor único. Cada mordida, una experiencia.
         </p>
         <div className="ab-btns">
-          <a href="#pedidos" className="ab-btn-primary">🛒 Pedir por WhatsApp</a>
-          <a href="#menu" className="ab-btn-secondary">Ver Menú</a>
+          <a href="#menu" className="ab-btn-primary">Ver Menú</a>
         </div>
       </div>
     </section>

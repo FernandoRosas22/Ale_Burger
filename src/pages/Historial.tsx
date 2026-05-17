@@ -51,13 +51,9 @@ function ResumenCierre({ pedidos, fechaCierreStr }: {
 }) {
   const efectivo      = pedidos.filter(p => p.cliente?.metodoPago === "efectivo");
   const transferencia = pedidos.filter(p => p.cliente?.metodoPago === "transferencia");
-  const debito        = pedidos.filter(p => p.cliente?.metodoPago === "debito");
-  const credito       = pedidos.filter(p => p.cliente?.metodoPago === "credito");
 
   const totalEfectivo      = efectivo.reduce((s, p) => s + (p.total ?? 0), 0);
   const totalTransferencia = transferencia.reduce((s, p) => s + (p.total ?? 0), 0);
-  const totalDebito        = debito.reduce((s, p) => s + (p.total ?? 0), 0);
-  const totalCredito       = credito.reduce((s, p) => s + (p.total ?? 0), 0);
   const totalGeneral       = pedidos.reduce((s, p) => s + (p.total ?? 0), 0);
   const totalDescuentos    = pedidos.reduce((s, p) => s + (p.descuento ?? 0), 0);
 
@@ -99,18 +95,7 @@ function ResumenCierre({ pedidos, fechaCierreStr }: {
             <strong>{formatPrecio(totalTransferencia)}</strong>
           </div>
         )}
-        {debito.length > 0 && (
-          <div className="hist-breakdown-row">
-            <span>💳 Débito <span className="hist-cant">({debito.length})</span></span>
-            <strong>{formatPrecio(totalDebito)}</strong>
-          </div>
-        )}
-        {credito.length > 0 && (
-          <div className="hist-breakdown-row">
-            <span>💳 Crédito <span className="hist-cant">({credito.length})</span></span>
-            <strong>{formatPrecio(totalCredito)}</strong>
-          </div>
-        )}
+
         {totalDescuentos > 0 && (
           <div className="hist-breakdown-row hist-breakdown-row--desc">
             <span>🏷 Descuentos aplicados</span>
@@ -211,15 +196,14 @@ export default function Historial() {
   const totalGlobal       = pedidos.reduce((s, p) => s + (p.total ?? 0), 0);
   const totalEfectivoG    = pedidos.filter(p => p.cliente?.metodoPago === "efectivo").reduce((s, p) => s + (p.total ?? 0), 0);
   const totalTransG       = pedidos.filter(p => p.cliente?.metodoPago === "transferencia").reduce((s, p) => s + (p.total ?? 0), 0);
-  const totalDebitoG      = pedidos.filter(p => p.cliente?.metodoPago === "debito").reduce((s, p) => s + (p.total ?? 0), 0);
-  const totalCreditoG     = pedidos.filter(p => p.cliente?.metodoPago === "credito").reduce((s, p) => s + (p.total ?? 0), 0);
+
 
   return (
     <div className="hist-root">
       <header className="adm-topbar">
         <h1 className="adm-titulo">📋 Historial</h1>
         <span className="adm-total-badge">{pedidos.length} pedidos archivados</span>
-        <a href="/admin" className="adm-logout-btn" style={{ textDecoration: "none" }}>← Comandas</a>
+        <a href="/admin" className="adm-volver-btn">← Volver a comandas</a>
         <button className="adm-logout-btn" onClick={logout}>Salir ↩</button>
       </header>
 
@@ -241,18 +225,7 @@ export default function Historial() {
                 <strong>{formatPrecio(totalTransG)}</strong>
               </div>
             )}
-            {totalDebitoG > 0 && (
-              <div className="hist-global-item">
-                <span>💳 Débito</span>
-                <strong>{formatPrecio(totalDebitoG)}</strong>
-              </div>
-            )}
-            {totalCreditoG > 0 && (
-              <div className="hist-global-item">
-                <span>💳 Crédito</span>
-                <strong>{formatPrecio(totalCreditoG)}</strong>
-              </div>
-            )}
+
           </div>
         </div>
       )}

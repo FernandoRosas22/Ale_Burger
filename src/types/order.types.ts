@@ -20,13 +20,11 @@ export const ESTADOS_PEDIDO: Record<EstadoPedido, { label: string; color: string
 export type TipoEntrega = "delivery" | "retiro";
 
 // ─── Método de pago ───────────────────────────────────────────
-export type MetodoPago = "efectivo" | "transferencia" | "debito" | "credito";
+export type MetodoPago = "efectivo" | "transferencia";
 
 export const METODOS_PAGO: Record<MetodoPago, { label: string; emoji: string; descuento?: number }> = {
   efectivo:      { label: "Efectivo",      emoji: "💵", descuento: 10 },
   transferencia: { label: "Transferencia", emoji: "📲" },
-  debito:        { label: "Débito",        emoji: "💳" },
-  credito:       { label: "Crédito",       emoji: "💳" },
 };
 
 // ─── Cliente ──────────────────────────────────────────────────

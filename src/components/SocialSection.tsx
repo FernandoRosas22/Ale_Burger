@@ -9,7 +9,6 @@ export default function SocialSection() {
         <p>Seguinos para ver las últimas novedades, promos y las mejores fotos de nuestras burgers.</p>
         <div className="ab-redes-btns">
           <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="ab-red ab-red-ig">Instagram</a>
-          <a href="#" className="ab-red ab-red-fb">Facebook</a>
           <a href="#" className="ab-red ab-red-tk">TikTok</a>
         </div>
       </div>

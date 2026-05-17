@@ -238,3 +238,22 @@
   .hist-global-monto { font-size: 52px; }
   .hist-grupos { padding: 0 4px; }
 }
+
+/* ─── Botón volver ────────────────────────────────────────── */
+.adm-volver-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,107,0,0.4);
+  background: rgba(255,107,0,0.08);
+  color: #ff6b00;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+  text-decoration: none;
+  transition: all 0.15s;
+  margin-left: auto;
+}
+.adm-volver-btn:hover { background: rgba(255,107,0,0.18); border-color: #ff6b00; }
