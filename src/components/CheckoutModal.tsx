@@ -47,6 +47,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const [errores, setErrores]   = useState<ErroresCheckout>({});
   const [paso, setPaso]         = useState<"form" | "enviando" | "exito" | "error">("form");
   const [pedidoId, setPedidoId] = useState<string>("");
+  const [errorMsg, setErrorMsg]   = useState<string>("");
 
   // Reset al abrir
   useEffect(() => {
@@ -120,9 +121,12 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       vaciarCarrito();
       cerrarCarrito();
       setPaso("exito");
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error guardando pedido:", e);
+      console.error("Código error:", e?.code);
+      console.error("Mensaje error:", e?.message);
       setPaso("error");
+      setErrorMsg(e?.message || "Error desconocido");
     }
   };
 
@@ -325,6 +329,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             <div className="co-exito-icono">😕</div>
             <h3>Algo salió mal</h3>
             <p>No pudimos registrar tu pedido. Intentá de nuevo o contactanos por WhatsApp.</p>
+          {errorMsg && <p style={{fontSize:"11px",color:"#e05252",fontFamily:"monospace",wordBreak:"break-all",maxWidth:"300px"}}>{errorMsg}</p>}
             <div className="co-error-btns">
               <button className="co-btn-confirmar" onClick={() => setPaso("form")}>
                 Reintentar
