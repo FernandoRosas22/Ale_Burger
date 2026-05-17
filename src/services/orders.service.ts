@@ -11,7 +11,6 @@ import {
   writeBatch,
   getDocs,
   query,
-  orderBy,
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import type { Pedido, EstadoPedido } from "@/types/order.types";
@@ -41,7 +40,8 @@ export async function actualizarEstado(id: string, estado: EstadoPedido): Promis
 // Trae TODOS los pedidos y archiva los que no tienen archivado:true
 // Así funciona con pedidos viejos que no tienen el campo
 export async function cerrarCaja(): Promise<number> {
-  const snap = await getDocs(query(collection(db, COLECCION), orderBy("fechaCreacion", "desc")));
+  // Sin orderBy para evitar conflictos con fechas en distintos formatos
+  const snap = await getDocs(query(collection(db, COLECCION)));
 
   // Filtramos los que NO están archivados (incluyendo los que no tienen el campo)
   const aArchivar = snap.docs.filter(d => {
