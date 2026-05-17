@@ -1,4 +1,4 @@
-const VIDEOS = [1, 2, 3, 4];
+const VIDEOS = [4, 2, 3, 1];
 
 export default function VideosSection() {
   return (
