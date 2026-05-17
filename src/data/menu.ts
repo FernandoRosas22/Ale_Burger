@@ -92,7 +92,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "GOLDEN BURGER",
         desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, panceta crocante, carne smash y pickles.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "10% OFF", emoji: "🍔", img: burger,
+        precio: "$13.050", precioAnt: "$14.500", tag: "10% OFF", img: burger,
         ingredientes: [
           { id: "ketchup",   nombre: "Ketchup" },
           { id: "mostaza",   nombre: "Mostaza" },
@@ -105,7 +105,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "NAPOLITANA",
         desc: "Pan de papa, cheddar x2, mayonesa, tomate, jamón y carne smash.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "🔥 Popular", emoji: "🥓", img: napolitana,
+        precio: "$13.050", precioAnt: "$14.500", tag: "🔥 Popular", img: napolitana,
         ingredientes: [
           { id: "mayonesa", nombre: "Mayonesa" },
           { id: "tomate",   nombre: "Tomate" },
@@ -116,7 +116,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "CUARTITO ALE",
         desc: "Pan de papa, cheddar x2, ketchup, mostaza, cebolla brunoise, carne smash.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", emoji: "🌶️", img: cuartitoale,
+        precio: "$13.050", precioAnt: "$14.500", tag: "Clásica", img: cuartitoale,
         ingredientes: [
           { id: "ketchup", nombre: "Ketchup" },
           { id: "mostaza", nombre: "Mostaza" },
@@ -127,7 +127,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "HBQ",
         desc: "Pan de papa, cheddar x2, BBQ, mostaza dulce, cebolla caramelizada, panceta crocante y carne smash.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", emoji: "🍖", img: hbq,
+        precio: "$13.050", precioAnt: "$14.500", tag: "BBQ", img: hbq,
         ingredientes: [
           { id: "bbq",              nombre: "Salsa BBQ" },
           { id: "mostaza-dulce",    nombre: "Mostaza dulce" },
@@ -139,7 +139,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "TUKI BURGER",
         desc: "Pan de papa, cheddar x2, BBQ, huevo a la plancha, panceta crocante y carne smash.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", emoji: "🍳", img: tukiburger,
+        precio: "$13.050", precioAnt: "$14.500", tag: "Con huevo", img: tukiburger,
         ingredientes: [
           { id: "bbq",    nombre: "Salsa BBQ" },
           { id: "huevo",  nombre: "Huevo a la plancha" },
@@ -150,7 +150,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "DELUXE CRISPY",
         desc: "Pan de papa, cheddar x2, BBQ, cebolla crispy, panceta crocante, carne smash y pickles.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", emoji: "🧅", img: deluxecrispy,
+        precio: "$13.050", precioAnt: "$14.500", tag: "Crispy", img: deluxecrispy,
         ingredientes: [
           { id: "bbq",             nombre: "Salsa BBQ" },
           { id: "cebolla-crispy",  nombre: "Cebolla crispy" },
@@ -162,7 +162,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "CHEESE BURGER",
         desc: "Pan de papa, salsa mil islas, carne smash x2 y cheddar x2. Incluye papas fritas.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "Doble + Papas", emoji: "🧀", img: cheeseburger,
+        precio: "$13.050", precioAnt: "$14.500", tag: "Doble + Papas", img: cheeseburger,
         ingredientes: [
           { id: "mil-islas", nombre: "Salsa mil islas" },
         ],
@@ -171,7 +171,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "CHEESE BACON",
         desc: "Pan de papa, cheddar x2, panceta crocante y carne smash.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "🥓 Bacon", emoji: "🥓", img: cheesebacon,
+        precio: "$13.050", precioAnt: "$14.500", tag: "🥓 Bacon", img: cheesebacon,
         ingredientes: [
           { id: "panceta", nombre: "Panceta crocante" },
         ],
@@ -180,7 +180,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "LA FITZ ROY",
         desc: "Pan de papa, cheddar x2, BBQ, lechuga, tomate, cebolla, panceta crocante, carne smash x2 y pickles.",
-        precio: "$15.750", precioAnt: "$17.500", tag: "Premium", emoji: "⭐", img: lafitzroy,
+        precio: "$15.750", precioAnt: "$17.500", tag: "Premium", img: lafitzroy,
         ingredientes: [
           { id: "bbq",     nombre: "Salsa BBQ" },
           { id: "lechuga", nombre: "Lechuga" },
@@ -194,7 +194,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "BIG MAC",
         desc: "Pan de papa, cheddar x2, salsa big mac, lechuga, cebolla, carne smash x2 y pickles.",
-        precio: "$15.750", precioAnt: "$17.500", tag: "Doble", emoji: "🍔", img: bigmac,
+        precio: "$15.750", precioAnt: "$17.500", tag: "Doble", img: bigmac,
         ingredientes: [
           { id: "salsa-bigmac", nombre: "Salsa Big Mac" },
           { id: "lechuga",      nombre: "Lechuga" },
@@ -206,7 +206,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "NOT BURGER",
         desc: "Pan de papa, cheddar x2, salsa mil islas, lechuga, tomate, cebolla brunoise y medallón veggie.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "🌱 Veggie", emoji: "🥬", img: notburger,
+        precio: "$13.050", precioAnt: "$14.500", tag: "🌱 Veggie", img: notburger,
         ingredientes: [
           { id: "mil-islas", nombre: "Salsa mil islas" },
           { id: "lechuga",   nombre: "Lechuga" },
@@ -233,7 +233,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "SWEET BURGER",
         desc: "Pan de papa, salsa big mac, cebolla caramelizada con miel, carne smash y cheddar x2.",
-        precio: "$13.050", precioAnt: "$14.500", tag: "Dulce", emoji: "🍯", img: sweetburger,
+        precio: "$13.050", precioAnt: "$14.500", tag: "Dulce", img: sweetburger,
         ingredientes: [
           { id: "salsa-bigmac",    nombre: "Salsa Big Mac" },
           { id: "cebolla-caramel", nombre: "Cebolla caramelizada con miel" },
@@ -243,7 +243,7 @@ export const menu: MenuCategory[] = [
       {
         nombre: "BACON JAM",
         desc: "Pan de papa invertido, mermelada de bacon y cebolla caramelizada, queso dambo, queso cheddar, carne smash x2 y pickles.",
-        precio: "$15.750", precioAnt: "$17.500", tag: "Premium", emoji: "🔥", img: baconjam,
+        precio: "$15.750", precioAnt: "$17.500", tag: "Premium", img: baconjam,
         ingredientes: [
           { id: "mermelada-bacon",  nombre: "Mermelada de bacon" },
           { id: "cebolla-caramel",  nombre: "Cebolla caramelizada" },
@@ -266,9 +266,9 @@ export const menu: MenuCategory[] = [
     titulo: "BEBIDAS",
     subtitulo: "Para acompañar tu burger.",
     items: [
-      { nombre: "COCA COLA 500ml",  desc: "Bebida clásica bien fría.",            precio: "$2.500", tag: "Clásica", emoji: "🥤", img: cocaCola500 },
-      { nombre: "COCA COLA 1.75L",  desc: "Ideal para compartir en familia.",     precio: "$5.000", tag: "Familiar", emoji: "🧃", img: cocaCola175 },
-      { nombre: "FANTA 500ml",      desc: "Naranja, refrescante y bien fría.",    precio: "$2.500", tag: "Naranja", emoji: "🍊", img: fanta500 },
+      { nombre: "COCA COLA 500ml",  desc: "Bebida clásica bien fría.",            precio: "$2.500", tag: "Clásica", img: cocaCola500 },
+      { nombre: "COCA COLA 1.75L",  desc: "Ideal para compartir en familia.",     precio: "$5.000", tag: "Familiar", img: cocaCola175 },
+      { nombre: "FANTA 500ml",      desc: "Naranja, refrescante y bien fría.",    precio: "$2.500", tag: "Naranja", img: fanta500 },
     ],
   },
   {
