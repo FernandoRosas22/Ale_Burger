@@ -9,16 +9,16 @@ import {
   doc,
   serverTimestamp,
   writeBatch,
-  query,
-  where,
   getDocs,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import type { Pedido, EstadoPedido } from "@/types/order.types";
 
 const COLECCION = "orders";
 
-// ─── Guardar pedido nuevo (con archivado: false por defecto) ──
+// ─── Guardar pedido nuevo ─────────────────────────────────────
 export async function guardarPedido(pedido: Omit<Pedido, "id">): Promise<string> {
   const ref = await addDoc(collection(db, COLECCION), {
     ...pedido,
@@ -37,25 +37,26 @@ export async function actualizarEstado(id: string, estado: EstadoPedido): Promis
   });
 }
 
-// ─── Cierre de caja: archivar todos los pedidos activos ───────
-// Usa batch para hacer todas las escrituras en una sola operación
+// ─── Cierre de caja ───────────────────────────────────────────
+// Trae TODOS los pedidos y archiva los que no tienen archivado:true
+// Así funciona con pedidos viejos que no tienen el campo
 export async function cerrarCaja(): Promise<number> {
-  const q = query(
-    collection(db, COLECCION),
-    where("archivado", "==", false)
-  );
-  const snap = await getDocs(q);
+  const snap = await getDocs(query(collection(db, COLECCION), orderBy("fechaCreacion", "desc")));
 
-  if (snap.empty) return 0;
+  // Filtramos los que NO están archivados (incluyendo los que no tienen el campo)
+  const aArchivar = snap.docs.filter(d => {
+    const data = d.data();
+    return data.archivado !== true;
+  });
 
-  // Firestore batch acepta hasta 500 operaciones por batch
-  const LIMITE_BATCH = 499;
-  const docs = snap.docs;
+  if (aArchivar.length === 0) return 0;
+
+  const LIMITE = 499;
   let archivados = 0;
 
-  for (let i = 0; i < docs.length; i += LIMITE_BATCH) {
+  for (let i = 0; i < aArchivar.length; i += LIMITE) {
     const batch = writeBatch(db);
-    const grupo = docs.slice(i, i + LIMITE_BATCH);
+    const grupo = aArchivar.slice(i, i + LIMITE);
     grupo.forEach((d) => {
       batch.update(d.ref, {
         archivado: true,
@@ -70,7 +71,7 @@ export async function cerrarCaja(): Promise<number> {
   return archivados;
 }
 
-// ─── Serializar items para Firestore ─────────────────────────
+// ─── Serializar items ─────────────────────────────────────────
 export function serializarItems(items: Pedido["items"]) {
   return items.map((item) => ({
     nombre:          item.nombre,
