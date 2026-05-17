@@ -62,6 +62,8 @@ export interface Pedido {
   estado: EstadoPedido;
   fechaCreacion: string;
   fechaActualizacion?: string;
+  archivado?: boolean;
+  fechaCierre?: string;
   notas?: string;
 }
 
