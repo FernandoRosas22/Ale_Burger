@@ -90,24 +90,28 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
 
     try {
       const itemsPedido: ItemPedido[] = items.map((i) => ({
-        nombre:         i.nombre,
-        emoji:          i.emoji,
-        imagen:         i.imagen,
-        cantidad:       i.cantidad,
-        precioBase:     i.precioBase,
-        precioUnitario: i.precioUnitario,
-        subtotalItem:   i.precioUnitario * i.cantidad,
-        personalizacion: i.personalizacion,
+        nombre:         i.nombre ?? "",
+        emoji:          i.emoji ?? "",
+        imagen:         i.imagen ?? null,
+        cantidad:       i.cantidad ?? 1,
+        precioBase:     i.precioBase ?? 0,
+        precioUnitario: i.precioUnitario ?? 0,
+        subtotalItem:   (i.precioUnitario ?? 0) * (i.cantidad ?? 1),
+        personalizacion: {
+          ingredientesRemovidos: i.personalizacion?.ingredientesRemovidos ?? [],
+          extrasAgregados:       i.personalizacion?.extrasAgregados ?? [],
+          observaciones:         i.personalizacion?.observaciones ?? "",
+        },
       }));
 
       const id = await guardarPedido({
         cliente: {
-          nombre:                form.nombre.trim(),
-          telefono:              form.telefono.trim(),
-          direccion:             form.tipoEntrega === "retiro" ? "" : form.direccion.trim(),
-          tipoEntrega:           form.tipoEntrega,
-          metodoPago:            form.metodoPago,
-          observacionesGenerales: form.observacionesGenerales.trim(),
+          nombre:                 form.nombre.trim() || "",
+          telefono:               form.telefono?.trim() || "",
+          direccion:              form.tipoEntrega === "retiro" ? "" : (form.direccion?.trim() || ""),
+          tipoEntrega:            form.tipoEntrega,
+          metodoPago:             form.metodoPago,
+          observacionesGenerales: form.observacionesGenerales?.trim() || "",
         },
         items:    serializarItems(itemsPedido) as ItemPedido[],
         subtotal,
