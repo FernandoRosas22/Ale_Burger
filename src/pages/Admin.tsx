@@ -8,7 +8,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  where,
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/firebase";
@@ -173,16 +172,21 @@ export default function Admin() {
 
   // Solo pedidos NO archivados — realtime
   useEffect(() => {
+    // Sin where() para evitar índice compuesto.
+    // Filtramos archivado===false en el cliente para compatibilidad
+    // con pedidos viejos que no tienen el campo.
     const q = query(
       collection(db, "orders"),
-      where("archivado", "==", false),
       orderBy("fechaCreacion", "desc")
     );
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as (Pedido & { id: string })[];
-        setPedidos(data);
+        const data = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() })) as (Pedido & { id: string })[];
+        // archivado !== true cubre: false, undefined, null (pedidos viejos sin el campo)
+        const activos = data.filter((p) => p.archivado !== true);
+        setPedidos(activos);
         setCargando(false);
       },
       (err) => {
