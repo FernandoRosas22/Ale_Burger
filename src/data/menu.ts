@@ -1,4 +1,3 @@
-import burger from "@/assets/hamburguesa-hero.jpg";
 import cocaCola500 from "@/assets/coca-cola-500.jpg";
 import cocaCola175 from "@/assets/coca-cola-175.jpg";
 import fanta500 from "@/assets/fanta-500.jpg";
@@ -17,6 +16,9 @@ import sweetburger from "@/assets/SWEET.BURGER.jpg";
 import baconjam from "@/assets/BACON.JAM.jpg";
 import chickenale from "@/assets/CHICKEN.ALE.jpg";
 import bandejadepapa from "@/assets/BANDEJA.DE.PAPA.jpg";
+import burgers3x2 from "@/assets/3x2.BURGERS.DOBLES.jpg";
+import promomenucena from "@/assets/PROMO.MENÚ.CENA.jpg";
+import goldenburger from "@/assets/GOLDEN.BURGER.jpg";
 
 // ─── Ingrediente / Extra ───────────────────────────────────────────────────────
 export interface Ingrediente {
@@ -73,6 +75,7 @@ export const menu: MenuCategory[] = [
         tag: "🔥 Top",
         emoji: "🍔",
         destacado: true,
+        img: burgers3x2,
       },
       {
         nombre: "PROMO MENÚ CENA",
@@ -81,6 +84,7 @@ export const menu: MenuCategory[] = [
         tag: "Combo",
         emoji: "🔥",
         destacado: true,
+        img: promomenucena,
       },
     ],
   },
