@@ -1,6 +1,5 @@
 // ============================================================
 // StoreContext.tsx — Estado global abierto/cerrado del local
-// Lee y escucha en tiempo real el doc settings/store en Firestore
 // ============================================================
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
@@ -15,25 +14,26 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [abierto, setAbiertoLocal]   = useState(true);
-  const [cargando, setCargando]       = useState(true);
+  const [abierto, setAbiertoLocal] = useState(true);
+  const [cargando, setCargando]    = useState(true);
 
   useEffect(() => {
     const ref = doc(db, "settings", "store");
-    const unsub = onSnapshot(ref,
+    const unsub = onSnapshot(
+      ref,
       (snap) => {
         if (snap.exists()) {
           setAbiertoLocal(snap.data().abierto !== false);
         } else {
-          // Documento no existe todavía → crear con abierto:true
-          setDoc(ref, { abierto: true });
+          // Primera vez: crear el documento con abierto:true
+          setDoc(ref, { abierto: true }).catch(() => {});
           setAbiertoLocal(true);
         }
         setCargando(false);
       },
       (err) => {
-        console.error("StoreContext error:", err);
-        setAbiertoLocal(true); // fallback: si falla, dejamos abrir
+        console.warn("StoreContext:", err.message);
+        setAbiertoLocal(true);
         setCargando(false);
       }
     );
@@ -41,7 +41,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setAbierto = async (val: boolean) => {
-    await setDoc(doc(db, "settings", "store"), { abierto: val });
+    const ref = doc(db, "settings", "store");
+    await setDoc(ref, { abierto: val }, { merge: true });
   };
 
   return (

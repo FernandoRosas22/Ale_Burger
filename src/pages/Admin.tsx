@@ -240,11 +240,17 @@ export default function Admin() {
         {/* Toggle abierto/cerrado */}
         <button
           className={`adm-store-toggle ${abierto ? "adm-store-toggle--abierto" : "adm-store-toggle--cerrado"}`}
-          onClick={() => setAbierto(!abierto)}
-          title={abierto ? "Cerrar local" : "Abrir local"}
+          onClick={async () => {
+            try {
+              await setAbierto(!abierto);
+            } catch(e: any) {
+              alert("Error al cambiar estado: " + (e?.message || "Verificá las reglas de Firestore"));
+            }
+          }}
+          title={abierto ? "Click para cerrar local" : "Click para abrir local"}
         >
           <span className={`adm-store-dot ${abierto ? "adm-store-dot--abierto" : "adm-store-dot--cerrado"}`} />
-          {abierto ? "Local abierto" : "Local cerrado"}
+          {abierto ? "🟢 Local abierto" : "🔴 Local cerrado"}
         </button>
 
         {/* Cierre de caja */}
