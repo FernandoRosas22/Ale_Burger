@@ -19,6 +19,8 @@ import {
   type EstadoPedido,
 } from "@/types/order.types";
 import { useAuth } from "@/context/AuthContext";
+import { useStore } from "@/context/StoreContext";
+import "@/styles/store-status.css";
 import "@/styles/admin.css";
 
 // ─── Helpers ──────────────────────────────────────────────────
@@ -161,6 +163,7 @@ function Comanda({ pedido, onCambiarEstado }: {
 // ─── Página Admin ─────────────────────────────────────────────
 export default function Admin() {
   const { logout } = useAuth();
+  const { abierto, setAbierto } = useStore();
 
   const [pedidos, setPedidos]             = useState<(Pedido & { id: string })[]>([]);
   const [cargando, setCargando]           = useState(true);
@@ -233,6 +236,16 @@ export default function Admin() {
       <header className="adm-topbar">
         <h1 className="adm-titulo">🍔 Comandas</h1>
         <span className="adm-total-badge">{pedidos.length} pedidos</span>
+
+        {/* Toggle abierto/cerrado */}
+        <button
+          className={`adm-store-toggle ${abierto ? "adm-store-toggle--abierto" : "adm-store-toggle--cerrado"}`}
+          onClick={() => setAbierto(!abierto)}
+          title={abierto ? "Cerrar local" : "Abrir local"}
+        >
+          <span className={`adm-store-dot ${abierto ? "adm-store-dot--abierto" : "adm-store-dot--cerrado"}`} />
+          {abierto ? "Local abierto" : "Local cerrado"}
+        </button>
 
         {/* Cierre de caja */}
         <button

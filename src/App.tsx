@@ -6,12 +6,14 @@ import Historial from "./pages/Historial";
 import StressTest from "./pages/StressTest";
 import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
+import { StoreProvider } from "./context/StoreContext";
 import RutaProtegida from "./components/RutaProtegida";
 import Carrito from "./components/Carrito";
 
 export default function App() {
   return (
     <AuthProvider>
+      <StoreProvider>
       <CarritoProvider>
         <Routes>
           <Route path="/"            element={<Home />} />
@@ -23,6 +25,7 @@ export default function App() {
         </Routes>
         <Carrito />
       </CarritoProvider>
+      </StoreProvider>
     </AuthProvider>
   );
 }

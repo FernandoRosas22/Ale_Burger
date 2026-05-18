@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
+import { useStore } from "@/context/StoreContext";
 import { guardarPedido, serializarItems } from "@/services/orders.service";
 import {
   FORM_CHECKOUT_INICIAL,
@@ -42,6 +43,7 @@ function validar(form: FormCheckout): ErroresCheckout {
 // ─── Componente ───────────────────────────────────────────────
 export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const { items, subtotal, vaciarCarrito, cerrarCarrito } = useCarrito();
+  const { abierto } = useStore();
 
   const [form, setForm]         = useState<FormCheckout>(FORM_CHECKOUT_INICIAL);
   const [errores, setErrores]   = useState<ErroresCheckout>({});
@@ -80,6 +82,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   };
 
   const handleEnviar = async () => {
+    if (!abierto) {
+      setPaso("error");
+      setErrorMsg("El local está cerrado. No se pueden tomar pedidos en este momento.");
+      return;
+    }
     const errs = validar(form);
     if (Object.keys(errs).length > 0) {
       setErrores(errs);

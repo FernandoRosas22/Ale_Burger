@@ -8,6 +8,7 @@ import OrderSection from "@/components/OrderSection";
 import SocialSection from "@/components/SocialSection";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import StoreClosedBanner from "@/components/StoreClosedBanner";
 import CarritoFloat from "@/components/CarritoFloat";
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
       <Footer />
       <WhatsAppFloat />
       <CarritoFloat />
+      <StoreClosedBanner />
     </div>
   );
 }

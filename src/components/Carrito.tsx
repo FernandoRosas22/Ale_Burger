@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
+import { useStore } from "@/context/StoreContext";
 import CheckoutModal from "./CheckoutModal";
 
 export default function Carrito() {
@@ -18,6 +19,7 @@ export default function Carrito() {
   } = useCarrito();
 
   const [checkoutAbierto, setCheckoutAbierto] = useState(false);
+  const { abierto: localAbierto } = useStore();
 
   return (
     <>
@@ -135,9 +137,12 @@ export default function Carrito() {
 
             <button
               className="carrito-btn-pedido"
-              onClick={() => setCheckoutAbierto(true)}
+              onClick={() => localAbierto && setCheckoutAbierto(true)}
+              disabled={!localAbierto}
+              style={!localAbierto ? { opacity:0.4, cursor:"not-allowed" } : {}}
+              title={!localAbierto ? "El local está cerrado" : ""}
             >
-              Finalizar pedido 🛵
+              {localAbierto ? "Finalizar pedido 🛵" : "🔒 Local cerrado"}
             </button>
 
             <button className="carrito-btn-vaciar" onClick={vaciarCarrito}>
