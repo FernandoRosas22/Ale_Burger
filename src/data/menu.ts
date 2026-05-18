@@ -283,10 +283,10 @@ export const menu: MenuCategory[] = [
     titulo: "PARA ACOMPAÑAR",
     subtitulo: "Sumá un extra a tu pedido.",
     items: [
-      { nombre: "PAPAS CHICAS",      desc: "150grs de la mejor papa.",                               precio: "$2.700", precioAnt: "$3.000", tag: "10% OFF",      emoji: "🍟", img: bandejadepapa },
-      { nombre: "BANDEJA DE PAPAS",  desc: "350grs de papas crocantes.",                            precio: "$5.400", precioAnt: "$6.000", tag: "Para compartir", emoji: "🍟", img: bandejadepapa },
-      { nombre: "AROS DE CEBOLLA",   desc: "10 aros de cebolla por bandeja (150grs).",              precio: "$6.750", precioAnt: "$7.500", tag: "Crispy",         emoji: "🧅" },
-      { nombre: "CHICKEN ALE",       desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$14.400", precioAnt: "$16.000", tag: "🍗 Combo",    emoji: "🍗", img: chickenale },
+      { nombre: "PAPAS CHICAS",      desc: "150grs de la mejor papa.",                               precio: "$3.000", tag: "10% OFF",      emoji: "🍟", img: bandejadepapa },
+      { nombre: "BANDEJA DE PAPAS",  desc: "350grs de papas crocantes.",                            precio: "$6.000", tag: "Para compartir", emoji: "🍟", img: bandejadepapa },
+      { nombre: "AROS DE CEBOLLA",   desc: "10 aros de cebolla por bandeja (150grs).",              precio: "$7.500", tag: "Crispy",         emoji: "🧅" },
+      { nombre: "CHICKEN ALE",       desc: "4 piezas crocantes de pollo + papas + dip a elección.", precio: "$16.000", tag: "🍗 Combo",    emoji: "🍗", img: chickenale },
     ],
   },
 ];
