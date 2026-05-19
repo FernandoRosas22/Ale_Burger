@@ -25,7 +25,11 @@ function toDate(val: any): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 function ymd(d: Date) {
-  return d.toISOString().slice(0, 10);
+  // Usar fecha local (no UTC) para evitar desfase de zona horaria
+  const yyyy = d.getFullYear();
+  const mm   = String(d.getMonth() + 1).padStart(2, "0");
+  const dd   = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
 }
 function startOfDay(d: Date) {
   const r = new Date(d); r.setHours(0,0,0,0); return r;
@@ -41,12 +45,16 @@ function getRango(tipo: FiltroTipo, desde: string, hasta: string): [Date, Date] 
   const hoy = new Date();
   if (tipo === "hoy")    return [startOfDay(hoy), endOfDay(hoy)];
   if (tipo === "semana") {
-    const lun = new Date(hoy); lun.setDate(hoy.getDate() - hoy.getDay() + (hoy.getDay()===0?-6:1)); lun.setHours(0,0,0,0);
+    const lun = new Date(hoy);
+    const day = hoy.getDay();
+    lun.setDate(hoy.getDate() - (day === 0 ? 6 : day - 1));
+    lun.setHours(0,0,0,0);
     return [lun, endOfDay(hoy)];
   }
   if (tipo === "mes") {
     return [new Date(hoy.getFullYear(), hoy.getMonth(), 1, 0,0,0,0), endOfDay(hoy)];
   }
+  // "T00:00:00" sin Z para que lo interprete en hora local, no UTC
   const d = desde ? startOfDay(new Date(desde + "T00:00:00")) : startOfDay(hoy);
   const h = hasta  ? endOfDay(new Date(hasta  + "T00:00:00")) : endOfDay(hoy);
   return [d, h];
