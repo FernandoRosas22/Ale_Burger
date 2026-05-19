@@ -257,3 +257,170 @@
   margin-left: auto;
 }
 .adm-volver-btn:hover { background: rgba(255,107,0,0.18); border-color: #ff6b00; }
+
+/* ─── Filtros de fecha ────────────────────────────────────── */
+.hist-filtros {
+  padding: 12px 16px;
+  background: #161616;
+  border-bottom: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hist-filtros-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hist-filtro-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #333;
+  background: transparent;
+  color: #888;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.hist-filtro-btn:hover { border-color: #555; color: #ccc; }
+
+.hist-filtro-btn--activo {
+  border-color: var(--naranja, #ff6b00);
+  background: rgba(255,107,0,0.1);
+  color: var(--naranja, #ff6b00);
+}
+
+.hist-fechas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hist-fecha-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hist-fecha-field label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.hist-date-input {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  padding: 7px 10px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.hist-date-input:focus { outline: none; border-color: var(--naranja, #ff6b00); }
+
+.hist-rango-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+
+.hist-rango-label strong { color: var(--naranja, #ff6b00); }
+
+/* ─── Stats card ──────────────────────────────────────────── */
+.hist-stats-card {
+  background: #1a1008;
+  border: 1.5px solid rgba(255,107,0,0.25);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.hist-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+@media (min-width: 640px) { .hist-stats-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 960px) { .hist-stats-grid { grid-template-columns: repeat(6, 1fr); } }
+
+.hist-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: #1a1008;
+}
+
+.hist-stat span { font-size: 11px; color: rgba(255,255,255,0.4); }
+.hist-stat strong { font-size: 15px; color: #fff; font-weight: 900; }
+.hist-stat--naranja { color: var(--naranja, #ff6b00) !important; }
+.hist-stat--verde   { color: #4caf82 !important; }
+.hist-stat--azul    { color: #60a5fa !important; }
+.hist-stat--desc    { color: #f0c000 !important; }
+
+/* ─── Productos vendidos ──────────────────────────────────── */
+.hist-productos {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 16px;
+}
+
+.hist-productos-titulo {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 8px;
+}
+
+.hist-productos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hist-producto-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.hist-producto-nombre { flex: 1; color: #ccc; }
+.hist-producto-cant   { font-weight: 900; color: var(--naranja, #ff6b00); min-width: 28px; }
+.hist-producto-precio { color: #888; font-size: 11px; }
+
+/* ─── Grupo día ───────────────────────────────────────────── */
+.hist-grupo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.hist-grupo-dia {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  color: rgba(255,255,255,0.35);
+}
+
+.hist-grupo-total {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--naranja, #ff6b00);
+  letter-spacing: 0.5px;
+}
