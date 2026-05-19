@@ -8,6 +8,7 @@ import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { METODOS_PAGO, type Pedido } from "@/types/order.types";
 import "@/styles/historial.css";
+import CalendarioRango from "@/components/CalendarioRango";
 
 // ─── Helpers ──────────────────────────────────────────────────
 function formatPrecio(n: number) {
@@ -246,16 +247,11 @@ export default function Historial() {
         </div>
 
         {filtroTipo === "personalizado" && (
-          <div className="hist-fechas">
-            <div className="hist-fecha-field">
-              <label>Desde</label>
-              <input type="date" value={desde} onChange={e => setDesde(e.target.value)} className="hist-date-input" />
-            </div>
-            <div className="hist-fecha-field">
-              <label>Hasta</label>
-              <input type="date" value={hasta} onChange={e => setHasta(e.target.value)} className="hist-date-input" />
-            </div>
-          </div>
+          <CalendarioRango
+            desde={desde}
+            hasta={hasta}
+            onChange={(d, h) => { setDesde(d); setHasta(h); }}
+          />
         )}
 
         <div className="hist-rango-label">
