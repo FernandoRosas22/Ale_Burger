@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Historial from "./pages/Historial";
-import StressTest from "./pages/StressTest";
 import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
 import { StoreProvider } from "./context/StoreContext";
@@ -17,10 +16,9 @@ export default function App() {
       <CarritoProvider>
         <Routes>
           <Route path="/"            element={<Home />} />
-          <Route path="/login"       element={<Login />} />
-          <Route path="/admin"       element={<RutaProtegida><Admin /></RutaProtegida>} />
-          <Route path="/historial"   element={<RutaProtegida><Historial /></RutaProtegida>} />
-          <Route path="/stress-test" element={<RutaProtegida><StressTest /></RutaProtegida>} />
+          <Route path="/acceso"       element={<Login />} />
+          <Route path="/gestion-interna" element={<RutaProtegida><Admin /></RutaProtegida>} />
+          <Route path="/gestion-interna/historial" element={<RutaProtegida><Historial /></RutaProtegida>} />
           <Route path="*"            element={<Navigate to="/" replace />} />
         </Routes>
         <Carrito />

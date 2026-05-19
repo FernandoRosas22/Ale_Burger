@@ -263,7 +263,7 @@ export default function Admin() {
           🧾 Cerrar caja
         </button>
 
-        <a href="/historial" className="adm-logout-btn" style={{ textDecoration:"none" }}>📋 Historial</a>
+        <a href="/gestion-interna/historial" className="adm-logout-btn" style={{ textDecoration:"none" }}>📋 Historial</a>
         <button className="adm-logout-btn" onClick={logout} title="Cerrar sesión">Salir ↩</button>
       </header>
 

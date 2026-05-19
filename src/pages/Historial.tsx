@@ -271,7 +271,7 @@ export default function Historial() {
       <header className="adm-topbar">
         <h1 className="adm-titulo">📋 Historial</h1>
         <span className="adm-total-badge">{todos.length} archivados</span>
-        <a href="/admin" className="adm-volver-btn">← Comandas</a>
+        <a href="/gestion-interna" className="adm-volver-btn">← Comandas</a>
         <button className="adm-logout-btn" onClick={logout}>Salir ↩</button>
       </header>
 
