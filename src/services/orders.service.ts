@@ -10,6 +10,7 @@ import {
   serverTimestamp,
   writeBatch,
   getDocs,
+  getDoc,
   query,
 } from "firebase/firestore";
 import { db } from "@/firebase";
@@ -19,6 +20,12 @@ const COLECCION = "orders";
 
 // ─── Guardar pedido nuevo ─────────────────────────────────────
 export async function guardarPedido(pedido: Omit<Pedido, "id">): Promise<string> {
+  // Verificar estado del local antes de guardar
+  const storeSnap = await getDoc(doc(db, "settings", "store"));
+  if (storeSnap.exists() && storeSnap.data().abierto === false) {
+    throw new Error("LOCAL_CERRADO");
+  }
+
   const ref = await addDoc(collection(db, COLECCION), {
     ...pedido,
     archivado: false,

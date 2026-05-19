@@ -134,10 +134,12 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       setPaso("exito");
     } catch (e: any) {
       console.error("Error guardando pedido:", e);
-      console.error("Código error:", e?.code);
-      console.error("Mensaje error:", e?.message);
       setPaso("error");
-      setErrorMsg(e?.message || "Error desconocido");
+      if (e?.message === "LOCAL_CERRADO") {
+        setErrorMsg("El local está cerrado. No se aceptan pedidos en este momento.");
+      } else {
+        setErrorMsg(e?.message || "Error desconocido");
+      }
     }
   };
 
