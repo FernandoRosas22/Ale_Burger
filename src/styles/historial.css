@@ -550,3 +550,25 @@
   transition: all 0.15s;
 }
 .cal-clear:hover { border-color: #e05252; color: #e05252; }
+
+/* ─── Botón cargar más ────────────────────────────────────── */
+.hist-cargar-mas {
+  padding: 10px 28px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,107,0,0.4);
+  background: rgba(255,107,0,0.08);
+  color: #ff6b00;
+  font-size: 13px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hist-cargar-mas:hover:not(:disabled) {
+  background: rgba(255,107,0,0.18);
+  border-color: #ff6b00;
+}
+.hist-cargar-mas:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

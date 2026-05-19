@@ -2,8 +2,8 @@
 // Historial.tsx — Ventas archivadas con filtros de fecha
 // ============================================================
 
-import { useEffect, useState, useMemo } from "react";
-import { collection, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { collection, getDocs, orderBy, query, Timestamp, limit, startAfter, type DocumentSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { METODOS_PAGO, type Pedido } from "@/types/order.types";
@@ -172,28 +172,71 @@ function ListaPedidos({ peds }: { peds: (Pedido & { id: string })[] }) {
 // ─── Página principal ─────────────────────────────────────────
 export default function Historial() {
   const { logout } = useAuth();
-  const [todos, setTodos]         = useState<(Pedido & { id: string })[]>([]);
-  const [cargando, setCargando]   = useState(true);
-  const [error, setError]         = useState("");
+
+  // Paginación — carga de a 100 pedidos archivados por vez
+  const PAGINA = 100;
+  const [todos, setTodos]               = useState<(Pedido & { id: string })[]>([]);
+  const [cargando, setCargando]         = useState(true);
+  const [cargandoMas, setCargandoMas]   = useState(false);
+  const [hayMas, setHayMas]             = useState(false);
+  const [ultimoDoc, setUltimoDoc]       = useState<DocumentSnapshot | null>(null);
+  const [error, setError]               = useState("");
 
   // Filtros
-  const [filtroTipo, setFiltroTipo]   = useState<FiltroTipo>("mes");
-  const [desde, setDesde]             = useState("");
-  const [hasta, setHasta]             = useState("");
+  const [filtroTipo, setFiltroTipo] = useState<FiltroTipo>("mes");
+  const [desde, setDesde]           = useState("");
+  const [hasta, setHasta]           = useState("");
 
-  // Cargar todos los archivados una vez
+  // Carga inicial — primeros 100 archivados
   useEffect(() => {
-    const q = query(collection(db, "orders"), orderBy("fechaCreacion", "desc"));
-    const unsub = onSnapshot(q,
-      snap => {
-        const data = snap.docs.map(d => ({ id: d.id, ...d.data() })) as (Pedido & { id: string })[];
-        setTodos(data.filter(p => p.archivado === true));
-        setCargando(false);
-      },
-      err => { console.error(err); setError("No se pudo cargar el historial."); setCargando(false); }
+    setCargando(true);
+    setTodos([]);
+    setUltimoDoc(null);
+    const q = query(
+      collection(db, "orders"),
+      orderBy("fechaCreacion", "desc"),
+      limit(PAGINA)
     );
-    return () => unsub();
+    getDocs(q)
+      .then(snap => {
+        const data = snap.docs
+          .map(d => ({ id: d.id, ...d.data() })) as (Pedido & { id: string })[];
+        setTodos(data.filter(p => p.archivado === true));
+        setUltimoDoc(snap.docs[snap.docs.length - 1] ?? null);
+        setHayMas(snap.docs.length === PAGINA);
+        setCargando(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setError("No se pudo cargar el historial.");
+        setCargando(false);
+      });
   }, []);
+
+  // Cargar más pedidos
+  const cargarMas = useCallback(async () => {
+    if (!ultimoDoc || cargandoMas) return;
+    setCargandoMas(true);
+    try {
+      const q = query(
+        collection(db, "orders"),
+        orderBy("fechaCreacion", "desc"),
+        startAfter(ultimoDoc),
+        limit(PAGINA)
+      );
+      const snap = await getDocs(q);
+      const data = snap.docs
+        .map(d => ({ id: d.id, ...d.data() })) as (Pedido & { id: string })[];
+      const archivados = data.filter(p => p.archivado === true);
+      setTodos(prev => [...prev, ...archivados]);
+      setUltimoDoc(snap.docs[snap.docs.length - 1] ?? null);
+      setHayMas(snap.docs.length === PAGINA);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCargandoMas(false);
+    }
+  }, [ultimoDoc, cargandoMas]);
 
   // Filtrar por rango
   const pedidosFiltrados = useMemo(() => {
@@ -327,6 +370,28 @@ export default function Historial() {
             );
           })}
         </div>
+
+        {/* Cargar más */}
+        {hayMas && (
+          <div style={{ textAlign:"center", padding:"20px 0" }}>
+            <button
+              className="hist-cargar-mas"
+              onClick={cargarMas}
+              disabled={cargandoMas}
+            >
+              {cargandoMas ? "Cargando..." : `Cargar más pedidos`}
+            </button>
+            <p style={{ fontSize:"11px", color:"rgba(255,255,255,0.3)", marginTop:8 }}>
+              Mostrando {todos.length} pedidos archivados
+            </p>
+          </div>
+        )}
+
+        {!hayMas && todos.length > 0 && (
+          <p style={{ textAlign:"center", fontSize:"11px", color:"rgba(255,255,255,0.2)", padding:"16px 0" }}>
+            ✓ Todos los pedidos cargados ({todos.length} total)
+          </p>
+        )}
       </main>
     </div>
   );
