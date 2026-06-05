@@ -1,11 +1,10 @@
 // ============================================================
-// ProductModal.tsx
-// Modal de personalización de producto antes de agregar al carrito
+// ProductModal.tsx — v2: tamaños en lugar de extras
 // ============================================================
 
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import type { MenuItem, Ingrediente, Extra } from "@/data/menu";
+import type { MenuItem, Ingrediente } from "@/data/menu";
 import { useCarrito, parsePrecio, formatPrecio } from "@/context/CarritoContext";
 
 interface ProductModalProps {
@@ -18,19 +17,24 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
   const { agregarAlCarrito } = useCarrito();
 
   const [ingredientesRemovidos, setIngredientesRemovidos] = useState<Ingrediente[]>([]);
-  const [extrasSeleccionados, setExtrasSeleccionados]     = useState<Extra[]>([]);
+  const [tamanioSeleccionado, setTamanioSeleccionado]     = useState<string | null>(null);
   const [observaciones, setObservaciones]                 = useState("");
   const [cantidad, setCantidad]                           = useState(1);
   const [exito, setExito]                                 = useState(false);
 
-  // Reset al abrir
+  // Reset al abrir — seleccionar "simple" por defecto
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && item) {
       setIngredientesRemovidos([]);
-      setExtrasSeleccionados([]);
       setObservaciones("");
       setCantidad(1);
       setExito(false);
+      // Default: primer tamaño (simple)
+      if (item.tamanios && item.tamanios.length > 0) {
+        setTamanioSeleccionado(item.tamanios[0].id);
+      } else {
+        setTamanioSeleccionado(null);
+      }
     }
   }, [isOpen, item?.nombre]);
 
@@ -47,20 +51,12 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
     );
   }, []);
 
-  const toggleExtra = useCallback((ext: Extra) => {
-    setExtrasSeleccionados((prev) =>
-      prev.some((e) => e.id === ext.id) ? prev.filter((e) => e.id !== ext.id) : [...prev, ext]
-    );
-  }, []);
-
   if (!isOpen || !item) return null;
 
-  const precioBase   = parsePrecio(item.precio);
-  const extrasTotal  = extrasSeleccionados.reduce((s, e) => s + e.precio, 0);
-  const precioUnit   = precioBase + extrasTotal;
-  const precioTotal  = precioUnit * cantidad;
-
-  const tienePersonalizacion = (item.ingredientes?.length ?? 0) > 0 || (item.extras?.length ?? 0) > 0;
+  // Precio: si tiene tamaños usar el seleccionado, si no el base del item
+  const tamanioActual = item.tamanios?.find((t) => t.id === tamanioSeleccionado);
+  const precioUnit    = tamanioActual ? tamanioActual.precio : parsePrecio(item.precio);
+  const precioTotal   = precioUnit * cantidad;
 
   const handleAgregar = () => {
     if (!item) return;
@@ -68,7 +64,7 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
       item,
       {
         ingredientesRemovidos,
-        extrasAgregados: extrasSeleccionados,
+        extrasAgregados: [],
         observaciones: observaciones.trim(),
       },
       cantidad,
@@ -108,75 +104,89 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
           <div className="pm-info">
             <h2 className="pm-nombre">{item.nombre}</h2>
             {item.desc && <p className="pm-desc">{item.desc}</p>}
-            <span className="pm-precio-base">Precio base: {formatPrecio(precioBase)}</span>
           </div>
 
-          {/* Ingredientes removibles */}
+          {/* ── Selector de tamaño ── */}
+          {item.tamanios && item.tamanios.length > 0 && (
+            <div className="pm-section">
+              <div className="pm-section-header">
+                <h3 className="pm-section-title">ELEGÍ EL TAMAÑO DE TU BURGER</h3>
+                <span className="pm-section-badge">Elegí 1</span>
+              </div>
+              <div className="pm-tamanios">
+                {item.tamanios.map((tam) => {
+                  const sel = tamanioSeleccionado === tam.id;
+                  return (
+                    <label
+                      key={tam.id}
+                      className={`pm-tamanio${sel ? " pm-tamanio--sel" : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        name="tamanio"
+                        value={tam.id}
+                        checked={sel}
+                        onChange={() => setTamanioSeleccionado(tam.id)}
+                        className="pm-tamanio-radio"
+                      />
+                      <span className="pm-tamanio-radio-ui" aria-hidden="true" />
+                      <span className="pm-tamanio-nombre">{tam.nombre}</span>
+                      <span className="pm-tamanio-precios">
+                        {tam.precioAnt && (
+                          <span className="pm-tamanio-ant">{formatPrecio(tam.precioAnt)}</span>
+                        )}
+                        <span className="pm-tamanio-precio">{formatPrecio(tam.precio)}</span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ── Ingredientes removibles ── */}
           {(item.ingredientes?.length ?? 0) > 0 && (
             <div className="pm-section">
-              <h3 className="pm-section-title">Sacar ingredientes</h3>
-              <div className="pm-chips">
+              <div className="pm-section-header">
+                <h3 className="pm-section-title">¿QUERÉS SACARLE ALGO?</h3>
+                <span className="pm-section-badge">Elegí hasta {item.ingredientes!.length}</span>
+              </div>
+              <div className="pm-ing-list">
                 {item.ingredientes!.map((ing) => {
                   const removido = ingredientesRemovidos.some((i) => i.id === ing.id);
                   return (
-                    <button
+                    <label
                       key={ing.id}
-                      className={`pm-chip${removido ? " pm-chip--removido" : ""}`}
-                      onClick={() => toggleIngrediente(ing)}
-                      aria-pressed={removido}
+                      className={`pm-ing-row${removido ? " pm-ing-row--sel" : ""}`}
                     >
-                      <span className="pm-chip-icon">{removido ? "✕" : "✓"}</span>
-                      {ing.nombre}
-                    </button>
+                      <input
+                        type="checkbox"
+                        checked={removido}
+                        onChange={() => toggleIngrediente(ing)}
+                        className="pm-ing-checkbox"
+                      />
+                      <span className="pm-ing-check-ui" aria-hidden="true">
+                        {removido && (
+                          <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                            <path d="M1 4.5L4.5 8L11 1" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </span>
+                      <span className="pm-ing-nombre">SIN {ing.nombre.toUpperCase()}</span>
+                      <span className="pm-ing-precio">+$0</span>
+                    </label>
                   );
                 })}
               </div>
             </div>
           )}
 
-          {/* Extras */}
-          {(item.extras?.length ?? 0) > 0 && (
-            <div className="pm-section">
-              <h3 className="pm-section-title">Agregar extras</h3>
-              <div className="pm-extras">
-                {item.extras!.map((ext) => {
-                  const sel = extrasSeleccionados.some((e) => e.id === ext.id);
-                  return (
-                    <div
-                      key={ext.id}
-                      className={`pm-extra${sel ? " pm-extra--sel" : ""}`}
-                      onClick={() => toggleExtra(ext)}
-                      role="checkbox"
-                      aria-checked={sel}
-                      tabIndex={0}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleExtra(ext); }}
-                    >
-                      <div className="pm-extra-left">
-                        <div className="pm-checkbox">
-                          {sel && (
-                            <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
-                              <path d="M1 4.5L4.5 8L11 1" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          )}
-                        </div>
-                        <span className="pm-extra-nombre">{ext.nombre}</span>
-                      </div>
-                      <span className="pm-extra-precio">+{formatPrecio(ext.precio)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Observaciones — siempre visible */}
+          {/* Observaciones */}
           <div className="pm-section">
-            <h3 className="pm-section-title">
-              {tienePersonalizacion ? "Observaciones" : "¿Alguna aclaración?"}
-            </h3>
+            <h3 className="pm-section-title">Observaciones</h3>
             <textarea
               className="pm-obs"
-              placeholder="Ej: sin ketchup, bien cocida, aparte la salsa..."
+              placeholder="Ej: bien cocida, aparte la salsa..."
               value={observaciones}
               onChange={(e) => setObservaciones(e.target.value)}
               maxLength={200}
@@ -187,7 +197,6 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
 
         {/* Footer */}
         <div className="pm-footer">
-          {/* Cantidad */}
           <div className="pm-qty" role="group" aria-label="Cantidad">
             <button
               className="pm-qty-btn"
@@ -203,7 +212,6 @@ export default function ProductModal({ item, isOpen, onClose }: ProductModalProp
             >+</button>
           </div>
 
-          {/* Agregar */}
           <button
             className={`pm-add-btn${exito ? " pm-add-btn--ok" : ""}`}
             onClick={handleAgregar}
