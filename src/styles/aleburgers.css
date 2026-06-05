@@ -194,7 +194,6 @@ body {
   .ab-mapa-wrap iframe { height: 360px; }
 }
 @media (max-width: 480px) {
-  .ab-btns { flex-direction: column; align-items: center; }
   .ab-stats { grid-template-columns: 1fr 1fr; }
   .ab-scroller-track > .ab-card { flex-basis: 82%; }
   .ab-videos-track > .ab-video-card { flex-basis: 70%; }
