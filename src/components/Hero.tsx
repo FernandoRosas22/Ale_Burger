@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="ab-hero">
       <img
-        src={Fondo}
+        src={fondo}
         alt="AleBurgers - Hamburguesas Smash"
         className="ab-hero-img"
       />
