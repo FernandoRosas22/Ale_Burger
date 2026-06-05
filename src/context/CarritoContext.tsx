@@ -1,12 +1,7 @@
-// ============================================================
-// CarritoContext.tsx
-// Estado global del carrito usando React Context + localStorage
-// ============================================================
-
 import { createContext, useContext, useReducer, useEffect, ReactNode } from "react";
 import type { Ingrediente, Extra, MenuItem } from "@/data/menu";
+import { type Zona, SIN_ZONA } from "@/data/zonas";
 
-// ─── Tipos ───────────────────────────────────────────────────
 export interface PersonalizacionItem {
   ingredientesRemovidos: Ingrediente[];
   extrasAgregados: Extra[];
@@ -14,11 +9,11 @@ export interface PersonalizacionItem {
 }
 
 export interface ProductoCarrito {
-  cartId: string;      // id único por entrada en carrito (para soportar misma burger con distintas personalizaciones)
-  id: string;          // nombre del producto (id original)
+  cartId: string;
+  id: string;
   nombre: string;
   precioBase: number;
-  precioUnitario: number; // precioBase + extras
+  precioUnitario: number;
   precioStr: string;
   imagen?: string;
   emoji: string;
@@ -29,6 +24,7 @@ export interface ProductoCarrito {
 interface EstadoCarrito {
   items: ProductoCarrito[];
   abierto: boolean;
+  zonaEnvio: Zona;
 }
 
 type AccionCarrito =
@@ -37,22 +33,26 @@ type AccionCarrito =
   | { type: "ELIMINAR"; cartId: string }
   | { type: "VACIAR" }
   | { type: "TOGGLE_CARRITO" }
-  | { type: "CERRAR_CARRITO" };
+  | { type: "CERRAR_CARRITO" }
+  | { type: "SET_ZONA"; zona: Zona };
 
 interface ContextoCarrito {
   items: ProductoCarrito[];
   abierto: boolean;
   totalItems: number;
   subtotal: number;
+  costoEnvio: number;
+  total: number;
+  zonaEnvio: Zona;
   agregarAlCarrito: (menuItem: MenuItem, personalizacion: PersonalizacionItem, cantidad: number, precioUnitario: number) => void;
   quitarUno: (cartId: string) => void;
   eliminarItem: (cartId: string) => void;
   vaciarCarrito: () => void;
   toggleCarrito: () => void;
   cerrarCarrito: () => void;
+  setZonaEnvio: (zona: Zona) => void;
 }
 
-// ─── Reducer ─────────────────────────────────────────────────
 const STORAGE_KEY = "aleburgers_carrito_v2";
 
 function carritoReducer(estado: EstadoCarrito, accion: AccionCarrito): EstadoCarrito {
@@ -84,18 +84,20 @@ function carritoReducer(estado: EstadoCarrito, accion: AccionCarrito): EstadoCar
     case "CERRAR_CARRITO":
       return { ...estado, abierto: false };
 
+    case "SET_ZONA":
+      return { ...estado, zonaEnvio: accion.zona };
+
     default:
       return estado;
   }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────
 function cargarDesdeStorage(): EstadoCarrito {
   try {
     const guardado = localStorage.getItem(STORAGE_KEY);
-    if (guardado) return { items: JSON.parse(guardado), abierto: false };
+    if (guardado) return { items: JSON.parse(guardado), abierto: false, zonaEnvio: SIN_ZONA };
   } catch { /* ignorar */ }
-  return { items: [], abierto: false };
+  return { items: [], abierto: false, zonaEnvio: SIN_ZONA };
 }
 
 export function parsePrecio(precioStr: string): number {
@@ -110,10 +112,8 @@ export function formatPrecio(n: number): string {
   });
 }
 
-// ─── Context ─────────────────────────────────────────────────
 const CarritoContext = createContext<ContextoCarrito | null>(null);
 
-// ─── Provider ────────────────────────────────────────────────
 export function CarritoProvider({ children }: { children: ReactNode }) {
   const [estado, dispatch] = useReducer(carritoReducer, undefined, cargarDesdeStorage);
 
@@ -136,6 +136,8 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
 
   const totalItems = estado.items.reduce((acc, i) => acc + i.cantidad, 0);
   const subtotal   = estado.items.reduce((acc, i) => acc + i.precioUnitario * i.cantidad, 0);
+  const costoEnvio = estado.zonaEnvio.costo;
+  const total      = subtotal + costoEnvio;
 
   const agregarAlCarrito = (
     menuItem: MenuItem,
@@ -166,12 +168,16 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
         abierto: estado.abierto,
         totalItems,
         subtotal,
+        costoEnvio,
+        total,
+        zonaEnvio: estado.zonaEnvio,
         agregarAlCarrito,
         quitarUno: (cartId) => dispatch({ type: "QUITAR_UNO", cartId }),
         eliminarItem: (cartId) => dispatch({ type: "ELIMINAR", cartId }),
         vaciarCarrito: () => dispatch({ type: "VACIAR" }),
         toggleCarrito: () => dispatch({ type: "TOGGLE_CARRITO" }),
         cerrarCarrito: () => dispatch({ type: "CERRAR_CARRITO" }),
+        setZonaEnvio: (zona) => dispatch({ type: "SET_ZONA", zona }),
       }}
     >
       {children}
@@ -179,7 +185,6 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ─── Hook ────────────────────────────────────────────────────
 export function useCarrito(): ContextoCarrito {
   const ctx = useContext(CarritoContext);
   if (!ctx) throw new Error("useCarrito debe usarse dentro de <CarritoProvider>");
