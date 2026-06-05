@@ -1,10 +1,10 @@
-import fondo from '../assets/fondo.png';
+import fondo from '../assets/Fondo.png';
 
 export default function Hero() {
   return (
     <section className="ab-hero">
       <img
-        src={fondo}
+        src={Fondo}
         alt="AleBurgers - Hamburguesas Smash"
         className="ab-hero-img"
       />
