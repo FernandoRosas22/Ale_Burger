@@ -54,14 +54,8 @@ body {
 .ab-mobile a { color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 3px; }
 
 /* ===== HERO ===== */
-.ab-hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: radial-gradient(ellipse at 60% 50%, #3D1E00 0%, var(--negro) 65%); }
-.ab-hero-bg { position: absolute; font-family: 'Bebas Neue', sans-serif; font-size: clamp(100px, 22vw, 320px); color: rgba(255,107,0,.05); top: 50%; transform: translateY(-50%); white-space: nowrap; letter-spacing: 10px; user-select: none; pointer-events: none; }
-.ab-hero-content { text-align: center; z-index: 2; padding: 0 20px; }
-.ab-tag { font-size: 13px; letter-spacing: 5px; text-transform: uppercase; color: var(--naranja); font-weight: 700; margin-bottom: 16px; }
-.ab-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 12vw, 150px); line-height: .9; color: #fff; letter-spacing: 4px; text-shadow: 0 4px 40px rgba(255,107,0,.3); margin: 0; }
-.ab-h1 span { color: var(--naranja); }
-.ab-sub { font-size: clamp(16px, 2.5vw, 22px); color: rgba(255,255,255,.65); margin: 20px auto 40px; font-weight: 400; max-width: 500px; }
-.ab-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.ab-hero { min-height: 100svh; background-color: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(1.8rem, 4vw, 3.5rem); padding: 2rem 1.5rem; }
+.ab-hero-img { width: min(88vw, 680px); height: auto; display: block; }
 .ab-btn-primary { background: var(--naranja); color: #fff; padding: 16px 38px; border-radius: 50px; font-weight: 900; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; transition: transform .2s, background .2s, box-shadow .2s; box-shadow: 0 6px 30px rgba(255,107,0,.4); letter-spacing: 1px; }
 .ab-btn-primary:hover { transform: translateY(-3px) scale(1.04); background: var(--naranja-claro); box-shadow: 0 12px 40px rgba(255,107,0,.6); }
 .ab-btn-secondary { background: transparent; color: #fff; padding: 16px 38px; border-radius: 50px; font-weight: 900; font-size: 16px; border: 2px solid rgba(255,255,255,.3); transition: border-color .2s, transform .2s; letter-spacing: 1px; }
