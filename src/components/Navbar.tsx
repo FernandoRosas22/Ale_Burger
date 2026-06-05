@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "@/assets/logo.jpg";
+import logo from "@/assets/Logo-PNG-9.png";
 import { useScrolled } from "@/hooks/useScrolled";
 import { useCarrito } from "@/context/CarritoContext";
 
@@ -22,7 +22,6 @@ export default function Navbar() {
       <nav className={`ab-nav ${scrolled ? "scrolled" : ""}`}>
         <a href="#" className="ab-nav-logo">
           <img src={logo} alt="AleBurgers" />
-          <span>ALEBURGERS</span>
         </a>
         <ul className="ab-nav-links">
           {LINKS.map((l) => (
