@@ -1,23 +1,38 @@
+// ============================================================
+// MenuSection.tsx — Lee productos de Firestore en tiempo real
+// Fallback al menu.ts hardcodeado si Firestore está vacío
+// ============================================================
+
 import { useState } from "react";
+import { useProductos } from "@/hooks/useProductos";
 import { menu } from "@/data/menu";
 import type { MenuItem } from "@/data/menu";
+import { CATEGORIAS, productoToMenuItem } from "@/types/producto.types";
 import MenuCard from "./MenuCard";
 import ProductModal from "./ProductModal";
 
 export default function MenuSection() {
   const [itemSeleccionado, setItemSeleccionado] = useState<MenuItem | null>(null);
   const [modalAbierto, setModalAbierto]         = useState(false);
+  const { productos, cargando }                 = useProductos({ soloVisibles: true });
 
-  const abrirModal = (item: MenuItem) => {
-    setItemSeleccionado(item);
-    setModalAbierto(true);
-  };
+  const abrirModal = (item: MenuItem) => { setItemSeleccionado(item); setModalAbierto(true); };
+  const cerrarModal = () => { setModalAbierto(false); setTimeout(() => setItemSeleccionado(null), 350); };
 
-  const cerrarModal = () => {
-    setModalAbierto(false);
-    // Limpiamos el item con delay para no cortar la animación de cierre
-    setTimeout(() => setItemSeleccionado(null), 350);
-  };
+  // ── Si hay productos en Firestore, usarlos; si no, usar menu.ts ──
+  const usandoFirestore = !cargando && productos.length > 0;
+
+  // Agrupar productos de Firestore por categoría
+  const categorias = usandoFirestore
+    ? Object.entries(CATEGORIAS)
+        .map(([catId, titulo]) => {
+          const items = productos
+            .filter((p) => p.category === catId && p.available)
+            .map(productoToMenuItem);
+          return { id: catId, titulo, items };
+        })
+        .filter((c) => c.items.length > 0)
+    : menu; // fallback al hardcodeado
 
   return (
     <section id="menu" className="ab-section">
@@ -31,22 +46,28 @@ export default function MenuSection() {
           <span>pagando en efectivo, todos los días</span>
         </div>
         <nav className="ab-cat-nav" aria-label="Categorías del menú">
-          {menu.map((c) => (
+          {categorias.map((c) => (
             <a key={c.id} href={`#cat-${c.id}`}>{c.titulo}</a>
           ))}
         </nav>
       </div>
 
-      {menu.map((cat) => (
+      {cargando && (
+        <div className="ab-menu-loading">
+          {[1,2,3].map((i) => <div key={i} className="ab-menu-skeleton" />)}
+        </div>
+      )}
+
+      {!cargando && categorias.map((cat) => (
         <div key={cat.id} id={`cat-${cat.id}`} className="ab-cat">
           <header className="ab-cat-head">
             <h3 className="ab-cat-title">{cat.titulo}</h3>
-            {cat.subtitulo && <p>{cat.subtitulo}</p>}
+            {"subtitulo" in cat && cat.subtitulo && <p>{cat.subtitulo as string}</p>}
           </header>
           <div className="ab-scroller">
             <div className="ab-scroller-track">
               {cat.items.map((it) => (
-                <MenuCard key={it.nombre} item={it} onAbrirModal={abrirModal} />
+                <MenuCard key={it.nombre} item={it as MenuItem} onAbrirModal={abrirModal} />
               ))}
             </div>
           </div>
@@ -57,12 +78,7 @@ export default function MenuSection() {
         * Precios y disponibilidad sujetos a cambios. Consultá por WhatsApp o pedí online.
       </p>
 
-      {/* Modal montado una sola vez, fuera del loop */}
-      <ProductModal
-        item={itemSeleccionado}
-        isOpen={modalAbierto}
-        onClose={cerrarModal}
-      />
+      <ProductModal item={itemSeleccionado} isOpen={modalAbierto} onClose={cerrarModal} />
     </section>
   );
 }

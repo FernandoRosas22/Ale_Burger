@@ -21,8 +21,10 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
 import { whatsappLink } from "@/utils/contact";
+import GestionProductos from "@/components/productos/GestionProductos";
 import "@/styles/store-status.css";
 import "@/styles/admin.css";
+import "@/styles/productos.css";
 
 // ─── Mensajes WhatsApp por transición de estado ───────────────
 function getMensajeEstado(pedido: Pedido & { id: string }, nuevoEstado: EstadoPedido): string {
@@ -232,6 +234,7 @@ export default function Admin() {
   const [modalCierre, setModalCierre]     = useState(false);
   const [cerrandoCaja, setCerrandoCaja]   = useState(false);
   const [cierreMsj, setCierreMsj]         = useState("");
+  const [vistaActual, setVistaActual]     = useState<"comandas" | "productos">("comandas");
 
   // Solo pedidos NO archivados — realtime
   useEffect(() => {
@@ -294,8 +297,24 @@ export default function Admin() {
 
       {/* Topbar */}
       <header className="adm-topbar">
-        <h1 className="adm-titulo">🍔 Comandas</h1>
-        <span className="adm-total-badge">{pedidos.length} pedidos</span>
+        <h1 className="adm-titulo">🍔 AleBurgers</h1>
+
+        {/* Tabs de navegación */}
+        <div className="adm-tabs">
+          <button
+            className={`adm-tab${vistaActual === "comandas" ? " adm-tab--activo" : ""}`}
+            onClick={() => setVistaActual("comandas")}
+          >
+            🍳 Comandas
+            {pedidos.length > 0 && <span className="adm-tab-badge">{pedidos.length}</span>}
+          </button>
+          <button
+            className={`adm-tab${vistaActual === "productos" ? " adm-tab--activo" : ""}`}
+            onClick={() => setVistaActual("productos")}
+          >
+            🛍 Productos
+          </button>
+        </div>
 
         {/* Toggle abierto/cerrado */}
         <button
@@ -310,7 +329,7 @@ export default function Admin() {
           title={abierto ? "Click para cerrar local" : "Click para abrir local"}
         >
           <span className={`adm-store-dot ${abierto ? "adm-store-dot--abierto" : "adm-store-dot--cerrado"}`} />
-          {abierto ? "🟢 Local abierto" : "🔴 Local cerrado"}
+          {abierto ? "🟢 Abierto" : "🔴 Cerrado"}
         </button>
 
         {/* Cierre de caja */}
@@ -327,6 +346,10 @@ export default function Admin() {
         <button className="adm-logout-btn" onClick={logout} title="Cerrar sesión">Salir ↩</button>
       </header>
 
+      {/* Vista: Productos */}
+      {vistaActual === "productos" && <GestionProductos />}
+
+      {vistaActual === "comandas" && <>
       {/* Banner mensaje post-cierre */}
       {cierreMsj && (
         <div className="adm-banner">{cierreMsj}</div>
@@ -380,6 +403,7 @@ export default function Admin() {
           cargando={cerrandoCaja}
         />
       )}
+      </>}
     </div>
   );
 }
