@@ -429,3 +429,27 @@
 }
 .cc-btn-cancelar:hover:not(:disabled) { border-color: rgba(255,255,255,0.3); color: #fff; }
 .cc-btn-cancelar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ─── WhatsApp automation (botones de estado con WA) ──────── */
+.cmd-btn-estado--wsp {
+  position: relative;
+  padding-right: 28px !important;
+}
+
+.cmd-wsp-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Teléfono clickeable */
+.cmd-tel--link {
+  color: #25d366 !important;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  display: block;
+}
+.cmd-tel--link:hover { opacity: 0.8; text-decoration: underline; }

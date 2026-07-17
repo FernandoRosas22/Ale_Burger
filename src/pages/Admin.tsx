@@ -20,8 +20,34 @@ import {
 } from "@/types/order.types";
 import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
+import { whatsappLink } from "@/utils/contact";
 import "@/styles/store-status.css";
 import "@/styles/admin.css";
+
+// ─── Mensajes WhatsApp por transición de estado ───────────────
+function getMensajeEstado(pedido: Pedido & { id: string }, nuevoEstado: EstadoPedido): string {
+  const nombre = pedido.cliente?.nombre ?? "cliente";
+  const id     = pedido.id?.slice(0, 8).toUpperCase() ?? "";
+  const tipo   = pedido.cliente?.tipoEntrega;
+
+  switch (nuevoEstado) {
+    case "preparando":
+      return `¡Hola ${nombre}! 👨‍🍳 Tu pedido #${id} fue confirmado y ya está en preparación. En breve te avisamos cuando esté listo. ¡Gracias por elegir AleBurgers! 🍔`;
+    case "listo":
+      return tipo === "delivery"
+        ? `¡Hola ${nombre}! ✅ Tu pedido #${id} está listo y en camino. 🛵 ¡Ya salimos a entregarte!`
+        : `¡Hola ${nombre}! ✅ Tu pedido #${id} está listo para retirar. 🥡 ¡Te esperamos!`;
+    case "entregado":
+      return `¡Hola ${nombre}! 🎉 Tu pedido #${id} fue entregado. ¡Muchas gracias! Si te gustó, dejanos una reseña ⭐`;
+    case "cancelado":
+      return `Hola ${nombre}, lamentablemente tuvimos que cancelar tu pedido #${id}. Disculpá los inconvenientes. Escribinos si querés más información.`;
+    default:
+      return `Hola ${nombre}, tu pedido #${id} cambió de estado a: ${ESTADOS_PEDIDO[nuevoEstado]?.label}.`;
+  }
+}
+
+// ─── Estados que disparan WhatsApp ───────────────────────────
+const ESTADOS_CON_WHATSAPP: EstadoPedido[] = ["preparando", "listo", "entregado", "cancelado"];
 
 // ─── Helpers ──────────────────────────────────────────────────
 function formatFecha(val: Timestamp | string | undefined): string {
@@ -78,6 +104,21 @@ function Comanda({ pedido, onCambiarEstado }: {
 }) {
   const est  = ESTADOS_PEDIDO[pedido.estado] ?? ESTADOS_PEDIDO.pendiente;
   const pago = METODOS_PAGO[pedido.cliente?.metodoPago];
+  const tel  = pedido.cliente?.telefono?.replace(/\D/g, "") ?? "";
+
+  // Abre WhatsApp con el mensaje del nuevo estado y luego cambia el estado
+  const handleEstadoConWsp = (nuevoEstado: EstadoPedido) => {
+    if (ESTADOS_CON_WHATSAPP.includes(nuevoEstado) && tel) {
+      const msg       = getMensajeEstado(pedido, nuevoEstado);
+      const numLimpio = tel.startsWith("54") ? tel : `54${tel}`;
+      const url       = `https://wa.me/${numLimpio}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+      // Pequeño delay para que abra WhatsApp antes del cambio de estado
+      setTimeout(() => onCambiarEstado(pedido.id, nuevoEstado), 400);
+    } else {
+      onCambiarEstado(pedido.id, nuevoEstado);
+    }
+  };
 
   return (
     <article className="cmd-card" data-estado={pedido.estado}>
@@ -91,7 +132,20 @@ function Comanda({ pedido, onCambiarEstado }: {
 
       <div className="cmd-cliente">
         <span className="cmd-nombre">{pedido.cliente?.nombre ?? "—"}</span>
-        <span className="cmd-tel">{pedido.cliente?.telefono ?? "—"}</span>
+        {/* Teléfono clickeable si existe */}
+        {tel ? (
+          <a
+            className="cmd-tel cmd-tel--link"
+            href={`https://wa.me/54${tel}`}
+            target="_blank"
+            rel="noreferrer"
+            title="Abrir WhatsApp"
+          >
+            📱 {pedido.cliente.telefono}
+          </a>
+        ) : (
+          <span className="cmd-tel">Sin teléfono</span>
+        )}
         <span className="cmd-entrega">
           {pedido.cliente?.tipoEntrega === "delivery" ? "🛵 Delivery" : "🥡 Takeaway"}
           {pago && <> · {pago.emoji} {pago.label}</>}
@@ -143,15 +197,21 @@ function Comanda({ pedido, onCambiarEstado }: {
         </div>
       </div>
 
+      {/* ── Acciones: cambio de estado + WhatsApp automático ── */}
       <div className="cmd-acciones">
         {ORDEN_ESTADOS.filter((e) => e !== pedido.estado).map((e) => {
-          const info = ESTADOS_PEDIDO[e];
+          const info      = ESTADOS_PEDIDO[e];
+          const tieneWsp  = ESTADOS_CON_WHATSAPP.includes(e) && !!tel;
           return (
-            <button key={e} className="cmd-btn-estado"
+            <button
+              key={e}
+              className={`cmd-btn-estado${tieneWsp ? " cmd-btn-estado--wsp" : ""}`}
               style={{ borderColor: info.color, color: info.color }}
-              onClick={() => onCambiarEstado(pedido.id, e)}
+              onClick={() => handleEstadoConWsp(e)}
+              title={tieneWsp ? `Enviar WhatsApp y marcar como ${info.label}` : `Marcar como ${info.label}`}
             >
               {info.emoji} {info.label}
+              {tieneWsp && <span className="cmd-wsp-badge">🟢</span>}
             </button>
           );
         })}

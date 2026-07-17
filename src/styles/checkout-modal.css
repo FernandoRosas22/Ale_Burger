@@ -396,3 +396,77 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* ─── Flujo de transferencia (pantalla de éxito) ──────────── */
+.co-transferencia {
+  width: 100%;
+  background: rgba(37, 211, 102, 0.07);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.co-transferencia-titulo {
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: #25d366;
+  margin: 0 0 12px 0;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.co-transferencia-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.co-transf-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.co-transf-row span { color: rgba(255,255,255,0.5); }
+.co-transf-row strong { color: #fff; font-size: 0.92rem; }
+
+.co-transf-row--total {
+  border-bottom: none;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+.co-transf-row--total span { color: rgba(255,255,255,0.8); font-weight: 700; }
+.co-transf-row--total strong { color: var(--naranja); font-size: 1.1rem; }
+
+.co-transferencia-sub {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  margin: 0 0 12px 0;
+  font-style: italic;
+}
+
+.co-btn-whatsapp {
+  width: 100%;
+  background: #25d366;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.3px;
+}
+.co-btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+}

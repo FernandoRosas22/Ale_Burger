@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 import { useStore } from "@/context/StoreContext";
 import { guardarPedido, serializarItems } from "@/services/orders.service";
+import { whatsappLink } from "@/utils/contact";
 import {
   FORM_CHECKOUT_INICIAL,
   METODOS_PAGO,
@@ -17,6 +18,13 @@ import {
   type TipoEntrega,
   type ItemPedido,
 } from "@/types/order.types";
+
+// ─── Datos de transferencia ───────────────────────────────────
+const DATOS_TRANSFERENCIA = {
+  alias:    "ALEBURGERS",
+  titular:  "ALEJO",
+  banco:    "Mercado Pago",
+};
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -325,12 +333,56 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 ID: <code>{pedidoId.slice(0, 8).toUpperCase()}</code>
               </p>
             )}
-            {form.tipoEntrega === "delivery" && form.telefono && (
-              <p className="co-exito-sub">
-                Nos comunicaremos al <strong>{form.telefono}</strong> para confirmar.
-              </p>
+
+            {/* ── Si pagó por transferencia: mostrar datos + botón WhatsApp ── */}
+            {form.metodoPago === "transferencia" ? (
+              <div className="co-transferencia">
+                <p className="co-transferencia-titulo">📲 Datos para transferir</p>
+                <div className="co-transferencia-datos">
+                  <div className="co-transf-row">
+                    <span>Alias</span>
+                    <strong>{DATOS_TRANSFERENCIA.alias}</strong>
+                  </div>
+                  <div className="co-transf-row">
+                    <span>Titular</span>
+                    <strong>{DATOS_TRANSFERENCIA.titular}</strong>
+                  </div>
+                  <div className="co-transf-row">
+                    <span>Banco</span>
+                    <strong>{DATOS_TRANSFERENCIA.banco}</strong>
+                  </div>
+                  <div className="co-transf-row co-transf-row--total">
+                    <span>Monto a transferir</span>
+                    <strong>{formatPrecio(total)}</strong>
+                  </div>
+                </div>
+                <p className="co-transferencia-sub">
+                  Una vez que transferís, mandanos el comprobante por WhatsApp 👇
+                </p>
+                <button
+                  className="co-btn-whatsapp"
+                  onClick={() => {
+                    const msg =
+                      `Hola AleBurgers! 🍔 Acabo de hacer el pedido (ID: ${pedidoId.slice(0,8).toUpperCase()}).\n\n` +
+                      `Método de pago: Transferencia\n` +
+                      `Monto: ${formatPrecio(total)}\n\n` +
+                      `Te mando el comprobante adjunto 📎`;
+                    window.open(whatsappLink(msg), "_blank");
+                  }}
+                >
+                  Enviar comprobante por WhatsApp 🟢
+                </button>
+              </div>
+            ) : (
+              // Efectivo: mensaje simple
+              form.tipoEntrega === "delivery" && form.telefono && (
+                <p className="co-exito-sub">
+                  Nos comunicaremos al <strong>{form.telefono}</strong> para confirmar.
+                </p>
+              )
             )}
-            <button className="co-btn-confirmar" onClick={onClose}>
+
+            <button className="co-btn-confirmar" style={{ marginTop: "12px" }} onClick={onClose}>
               ¡Perfecto! 🍔
             </button>
           </div>
