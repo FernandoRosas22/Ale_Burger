@@ -540,3 +540,75 @@
   .adm-tabs { gap: 2px; }
   .adm-tab { padding: 6px 10px; font-size: 0.78rem; }
 }
+
+/* ─── Banner de migración ───────────────────────────────────── */
+.migrar-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(249,115,22,0.08);
+  border: 1px solid rgba(249,115,22,0.25);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.migrar-banner--loading {
+  justify-content: flex-start;
+  gap: 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+}
+
+.migrar-banner--ok {
+  background: rgba(37,211,102,0.08);
+  border-color: rgba(37,211,102,0.25);
+  color: #25d366;
+  font-weight: 700;
+}
+
+.migrar-banner--error {
+  background: rgba(220,38,38,0.08);
+  border-color: rgba(220,38,38,0.25);
+  color: #f87171;
+  gap: 12px;
+}
+
+.migrar-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+}
+
+.migrar-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+.migrar-info strong { color: #fff; font-size: 0.95rem; display: block; margin-bottom: 4px; }
+.migrar-info p { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin: 0; }
+
+.migrar-btn {
+  background: var(--naranja);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.migrar-btn:hover { opacity: 0.85; }
+
+.migrar-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--naranja);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}

@@ -12,6 +12,7 @@ import {
 } from "@/services/productos.service";
 import ProductoFormModal from "./ProductoFormModal";
 import ToastNotif, { useToasts } from "./ToastNotif";
+import MigrarProductos from "./MigrarProductos";
 import { CATEGORIAS, type Producto, type CategoriaProducto } from "@/types/producto.types";
 import { formatPrecio } from "@/context/CarritoContext";
 
@@ -87,7 +88,10 @@ export default function GestionProductos() {
     }
   };
 
-  // ─── Contadores ───────────────────────────────────────────
+  const [migrado, setMigrado] = useState(false);
+
+  // Mostrar banner de migración si no hay productos y ya terminó de cargar
+  const mostrarMigracion = !cargando && !error && productos.length === 0 && !migrado;
   const stats = useMemo(() => ({
     total:      productos.length,
     visibles:   productos.filter((p) => p.visible).length,
@@ -148,7 +152,12 @@ export default function GestionProductos() {
         </div>
       )}
 
-      {!cargando && !error && productosFiltrados.length === 0 && (
+      {/* ── Banner de migración (solo cuando no hay productos) ── */}
+      {mostrarMigracion && (
+        <MigrarProductos onMigrado={() => setMigrado(true)} />
+      )}
+
+      {!cargando && !error && productosFiltrados.length === 0 && !mostrarMigracion && (
         <div className="gp-vacio">
           {productos.length === 0
             ? <>

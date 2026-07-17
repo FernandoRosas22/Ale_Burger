@@ -1,29 +1,22 @@
 // ============================================================
-// storage.service.ts — Subida y eliminación de imágenes
-// Comprime automáticamente antes de subir (max 800px, 0.82 quality)
+// storage.service.ts — Subida via Cloudinary (gratis, sin tarjeta)
+// Plan gratuito: 25GB storage, 25GB bandwidth/mes
 // ============================================================
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import { storage } from "@/firebase";
+const CLOUD_NAME   = "aleburgers";   // ← vas a configurar esto
+const UPLOAD_PRESET = "aleburgers_productos"; // ← preset unsigned
 
-const MAX_DIMENSION = 800;
-const JPEG_QUALITY  = 0.82;
-const MAX_SIZE_MB   = 5;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const MAX_DIMENSION = 900;
+const JPEG_QUALITY  = 0.85;
+const MAX_SIZE_MB   = 8;
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 // ─── Validar archivo ──────────────────────────────────────────
 export function validarImagen(file: File): string | null {
-  if (!ALLOWED_TYPES.includes(file.type)) {
+  if (!ALLOWED_TYPES.includes(file.type))
     return "Solo se permiten imágenes JPG, PNG o WebP.";
-  }
-  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+  if (file.size > MAX_SIZE_MB * 1024 * 1024)
     return `La imagen no puede superar ${MAX_SIZE_MB}MB.`;
-  }
   return null;
 }
 
@@ -35,31 +28,18 @@ export function comprimirImagen(file: File): Promise<Blob> {
     img.onload = () => {
       URL.revokeObjectURL(url);
       let { width, height } = img;
-
-      // Reducir si supera MAX_DIMENSION manteniendo proporción
       if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-        if (width > height) {
-          height = Math.round((height * MAX_DIMENSION) / width);
-          width  = MAX_DIMENSION;
-        } else {
-          width  = Math.round((width * MAX_DIMENSION) / height);
-          height = MAX_DIMENSION;
-        }
+        if (width > height) { height = Math.round(height * MAX_DIMENSION / width); width = MAX_DIMENSION; }
+        else { width = Math.round(width * MAX_DIMENSION / height); height = MAX_DIMENSION; }
       }
-
       const canvas = document.createElement("canvas");
-      canvas.width  = width;
-      canvas.height = height;
+      canvas.width = width; canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (!ctx) return reject(new Error("Canvas no disponible"));
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
-        (blob) => {
-          if (!blob) return reject(new Error("Error al comprimir imagen"));
-          resolve(blob);
-        },
-        "image/jpeg",
-        JPEG_QUALITY
+        (blob) => blob ? resolve(blob) : reject(new Error("Error al comprimir")),
+        "image/jpeg", JPEG_QUALITY
       );
     };
     img.onerror = () => reject(new Error("No se pudo cargar la imagen"));
@@ -67,30 +47,38 @@ export function comprimirImagen(file: File): Promise<Blob> {
   });
 }
 
-// ─── Subir imagen a Firebase Storage ──────────────────────────
+// ─── Subir imagen a Cloudinary ────────────────────────────────
 export async function subirImagen(
   file: File,
-  carpeta: string = "products"
+  _carpeta: string = "products"
 ): Promise<{ url: string; ref: string }> {
-  const blob     = await comprimirImagen(file);
-  const ext      = "jpg"; // siempre jpeg después de comprimir
-  const nombre   = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const path     = `${carpeta}/${nombre}`;
-  const storRef  = ref(storage, path);
+  const blob = await comprimirImagen(file);
+  const fd   = new FormData();
+  fd.append("file", blob, "imagen.jpg");
+  fd.append("upload_preset", UPLOAD_PRESET);
+  fd.append("folder", "aleburgers/products");
 
-  await uploadBytes(storRef, blob, { contentType: "image/jpeg" });
-  const url = await getDownloadURL(storRef);
-  return { url, ref: path };
+  const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: "POST",
+    body: fd,
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message ?? "Error al subir imagen a Cloudinary");
+  }
+
+  const data = await res.json();
+  return {
+    url: data.secure_url,
+    ref: data.public_id, // usamos public_id como "ref" para poder borrar después
+  };
 }
 
-// ─── Eliminar imagen de Firebase Storage ─────────────────────
-export async function eliminarImagen(refPath: string): Promise<void> {
-  if (!refPath) return;
-  try {
-    const storRef = ref(storage, refPath);
-    await deleteObject(storRef);
-  } catch (e: any) {
-    // Si ya no existe (object-not-found), ignorar
-    if (e?.code !== "storage/object-not-found") throw e;
-  }
+// ─── Eliminar imagen de Cloudinary (requiere server, omitimos por ahora) ──
+export async function eliminarImagen(_refPath: string): Promise<void> {
+  // La eliminación desde el cliente requiere firma del servidor.
+  // Por ahora se omite — las imágenes viejas quedan en Cloudinary
+  // (el plan gratuito tiene 25GB, más que suficiente para un restaurante).
+  return;
 }
