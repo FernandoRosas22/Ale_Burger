@@ -633,3 +633,53 @@
   outline: none;
 }
 .zona-auto__select option { background: #1a1a1a; }
+
+/* ─── ZonaSelector grid de zonas ───────────────────────────── */
+.zona-auto__selector-wrap { display: flex; flex-direction: column; gap: 6px; }
+
+.zona-auto__requerido {
+  color: var(--naranja);
+  font-size: 0.72rem;
+  margin-left: 6px;
+  animation: carrito-pop 0.3s ease;
+}
+
+.zona-auto__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.zona-auto__chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+}
+.zona-auto__chip:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
+.zona-auto__chip--activo { font-weight: 700; }
+
+.zona-auto__chip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.zona-auto__chip-nombre {
+  flex: 1;
+  font-size: 0.78rem;
+  color: #fff;
+  font-weight: 700;
+}
+.zona-auto__chip-precio {
+  font-size: 0.72rem;
+  color: var(--naranja);
+  font-weight: 700;
+  white-space: nowrap;
+}
