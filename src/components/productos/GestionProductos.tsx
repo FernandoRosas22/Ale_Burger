@@ -9,6 +9,7 @@ import {
   duplicarProducto,
   toggleVisible,
   toggleDisponible,
+  actualizarProducto,
 } from "@/services/productos.service";
 import ProductoFormModal from "./ProductoFormModal";
 import ToastNotif, { useToasts } from "./ToastNotif";
@@ -71,6 +72,15 @@ export default function GestionProductos() {
       agregar(`"${p.name}" marcado como ${!p.available ? "disponible" : "agotado"} ✓`, "ok");
     } catch {
       agregar("Error al cambiar disponibilidad", "error");
+    }
+  };
+
+  const handleSetTag = async (p: Producto, tag: string) => {
+    try {
+      await actualizarProducto(p.id, { tag });
+      agregar(tag ? `Badge "${tag}" aplicado ✓` : "Badge removido ✓", "ok");
+    } catch {
+      agregar("Error al actualizar badge", "error");
     }
   };
 
@@ -239,6 +249,22 @@ export default function GestionProductos() {
                   <td className="gp-td-acciones">
                     <button className="gp-accion gp-accion--edit"  onClick={() => handleEditar(p)}    title="Editar">✏️</button>
                     <button className="gp-accion gp-accion--dup"   onClick={() => handleDuplicar(p)}  title="Duplicar">📋</button>
+                    {/* Badges rápidos */}
+                    <button
+                      className={`gp-accion${p.tag === "🔥 Más vendido" ? " gp-accion--badge-on" : ""}`}
+                      onClick={() => handleSetTag(p, p.tag === "🔥 Más vendido" ? "" : "🔥 Más vendido")}
+                      title="Marcar como Más vendido"
+                    >🔥</button>
+                    <button
+                      className={`gp-accion${p.tag === "✨ Nuevo" ? " gp-accion--badge-on" : ""}`}
+                      onClick={() => handleSetTag(p, p.tag === "✨ Nuevo" ? "" : "✨ Nuevo")}
+                      title="Marcar como Nuevo"
+                    >✨</button>
+                    <button
+                      className={`gp-accion${p.tag === "🏷 Oferta" ? " gp-accion--badge-on" : ""}`}
+                      onClick={() => handleSetTag(p, p.tag === "🏷 Oferta" ? "" : "🏷 Oferta")}
+                      title="Marcar como Oferta"
+                    >🏷</button>
                     <button className="gp-accion gp-accion--del"   onClick={() => setConfirmElim(p)}  title="Eliminar">🗑</button>
                   </td>
 

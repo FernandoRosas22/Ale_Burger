@@ -699,3 +699,81 @@
 }
 .cp-btn-guardar:hover:not(:disabled) { transform: translateY(-1px); opacity: 0.9; }
 .cp-btn-guardar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── Badge rápido activo ────────────────────────────────────── */
+.gp-accion--badge-on {
+  background: rgba(249,115,22,0.2) !important;
+  border-color: var(--naranja) !important;
+}
+
+/* ─── Descuentos en carrito ─────────────────────────────────── */
+.carrito-descuentos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ─── Config: descuentos ────────────────────────────────────── */
+.cp-descuentos { display: flex; flex-direction: column; gap: 10px; }
+
+.cp-desc-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity 0.2s;
+}
+.cp-desc-item--off { opacity: 0.45; }
+
+.cp-desc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-input-emoji {
+  width: 56px !important;
+  flex-shrink: 0;
+  text-align: center;
+  padding: 8px 6px !important;
+}
+
+.cp-desc-del {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.cp-desc-del:hover { color: #ff4444; }
+
+.cp-btn-agregar {
+  background: rgba(255,255,255,0.05);
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 10px;
+  color: rgba(255,255,255,0.5);
+  padding: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+.cp-btn-agregar:hover {
+  border-color: var(--naranja);
+  color: var(--naranja);
+  background: rgba(249,115,22,0.05);
+}
+
+.cp-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}

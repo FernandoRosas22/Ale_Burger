@@ -4,7 +4,7 @@
 // ============================================================
 
 const CLOUD_NAME    = "s8px89tm";
-const UPLOAD_PRESET = "productos de hamburguesas de cerveza";
+const UPLOAD_PRESET = "aleburgers_productos";
 
 const MAX_DIMENSION = 900;
 const JPEG_QUALITY  = 0.85;

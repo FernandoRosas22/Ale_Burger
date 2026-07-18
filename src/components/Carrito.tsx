@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 import { useStore } from "@/context/StoreContext";
 import CheckoutModal from "./CheckoutModal";
 import ZonaSelector from "./ZonaSelector";
 
 export default function Carrito() {
+  const [descuentosActivos, setDescuentosActivos] = useState<{emoji:string; titulo:string}[]>([]);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "settings", "config"), (snap) => {
+      if (snap.exists()) {
+        const d = (snap.data()?.descuentos ?? []) as {activo:boolean; emoji:string; titulo:string}[];
+        setDescuentosActivos(d.filter((x) => x.activo));
+      }
+    });
+    return () => unsub();
+  }, []);
   const {
     items,
     abierto,
@@ -151,7 +164,13 @@ export default function Carrito() {
               </div>
             </div>
 
-            <p className="carrito-footer-nota">* 10% OFF pagando en efectivo</p>
+            {descuentosActivos.length > 0 && (
+              <div className="carrito-descuentos">
+                {descuentosActivos.map((d, i) => (
+                  <p key={i} className="carrito-footer-nota">{d.emoji} {d.titulo}</p>
+                ))}
+              </div>
+            )}
 
             <button
               className="carrito-btn-pedido"
