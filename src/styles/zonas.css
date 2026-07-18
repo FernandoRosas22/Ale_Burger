@@ -1,0 +1,428 @@
+/* ============================================================
+   zonas.css — Módulo de gestión de zonas de reparto
+   ============================================================ */
+
+/* ─── Root del módulo ───────────────────────────────────────── */
+.gz-root {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+/* ─── Toolbar ───────────────────────────────────────────────── */
+.gz-toolbar {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--gris-oscuro);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.gz-busqueda {
+  flex: 1;
+  min-width: 180px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #fff;
+  padding: 8px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+}
+.gz-busqueda:focus { border-color: var(--naranja); }
+.gz-busqueda::placeholder { color: rgba(255,255,255,0.3); }
+
+.gz-vista-btns { display: flex; gap: 4px; }
+.gz-vista-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.6);
+  padding: 8px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.gz-vista-btn:hover { color: #fff; }
+.gz-vista-btn--activo { background: var(--naranja); border-color: var(--naranja); color: #fff; }
+
+.gz-btn-nueva {
+  background: var(--naranja);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+.gz-btn-nueva:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ─── Stats ─────────────────────────────────────────────────── */
+.gz-stats {
+  display: flex;
+  gap: 12px;
+  padding: 10px 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.gz-stat { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+.gz-stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: #fff; line-height: 1; }
+.gz-stat-n--ok   { color: #25d366; }
+.gz-stat-n--warn { color: #f97316; }
+
+/* ─── Contenido (mapa + panel) ──────────────────────────────── */
+.gz-contenido {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── Mapa ──────────────────────────────────────────────────── */
+.gz-mapa-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.gz-loading-mapa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.9rem;
+  background: var(--negro);
+  z-index: 10;
+}
+
+.mapa-zonas-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mapa-zonas-container {
+  flex: 1;
+  width: 100%;
+  min-height: 400px;
+}
+
+.mapa-zonas-hint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  border: 1px solid var(--naranja);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+.mapa-zonas-hint--edit { border-color: #25d366; }
+
+.mapa-zonas-cancelar {
+  background: rgba(255,68,68,0.2);
+  border: 1px solid #ff4444;
+  border-radius: 6px;
+  color: #ff8888;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  transition: background 0.15s;
+}
+.mapa-zonas-cancelar:hover { background: rgba(255,68,68,0.35); }
+
+/* ─── Lista de zonas ────────────────────────────────────────── */
+.gz-lista {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gz-zona-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--gris-oscuro);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.gz-zona-row:hover { border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.05); }
+.gz-zona-row--sel  { border-color: var(--naranja) !important; }
+.gz-zona-row--off  { opacity: 0.5; }
+
+.gz-zona-color {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.gz-zona-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.gz-zona-nombre { font-weight: 700; color: #fff; font-size: 0.9rem; }
+.gz-zona-meta   { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
+.gz-zona-costo  { font-weight: 700; color: var(--naranja); font-size: 0.88rem; white-space: nowrap; }
+.gz-zona-acciones { display: flex; gap: 4px; }
+
+/* ─── Panel form de zona (lateral) ─────────────────────────── */
+.zfp-root {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--negro);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: gz-slide-in 0.22s ease;
+}
+@keyframes gz-slide-in {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.zfp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+.zfp-titulo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: #fff; letter-spacing: 1px; margin: 0; }
+.zfp-cerrar { background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.5); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
+.zfp-cerrar:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+.zfp-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.zfp-body::-webkit-scrollbar { width: 4px; }
+.zfp-body::-webkit-scrollbar-thumb { background: var(--naranja); border-radius: 10px; }
+
+.zfp-field { display: flex; flex-direction: column; gap: 4px; }
+.zfp-label { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.5px; }
+.zfp-hint  { font-size: 0.68rem; color: rgba(255,255,255,0.3); margin-top: 2px; line-height: 1.4; }
+.zfp-preview { font-size: 0.78rem; color: var(--naranja); margin-top: 2px; }
+
+.zfp-input {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #fff;
+  padding: 9px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.zfp-input:focus { border-color: var(--naranja); }
+.zfp-input::placeholder { color: rgba(255,255,255,0.2); }
+
+/* Colores */
+.zfp-colores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.zfp-color-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.zfp-color-btn:hover { transform: scale(1.15); }
+.zfp-color-btn--activo { border-color: #fff; transform: scale(1.15); }
+
+.zfp-color-custom {
+  width: 30px; height: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+
+/* Estado polígono */
+.zfp-estado-poligono {
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.8rem;
+  color: #fbbf24;
+}
+.zfp-estado-poligono--ok {
+  background: rgba(37,211,102,0.08);
+  border-color: rgba(37,211,102,0.3);
+  color: #25d366;
+}
+
+/* Acciones secundarias */
+.zfp-acciones { display: flex; flex-direction: column; gap: 6px; }
+.zfp-btn-sec {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.6);
+  padding: 8px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.zfp-btn-sec:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+/* Eliminar */
+.zfp-btn-elim {
+  background: rgba(220,38,38,0.07);
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: 8px;
+  color: #f87171;
+  padding: 8px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.zfp-btn-elim:hover { background: rgba(220,38,38,0.15); border-color: #dc2626; }
+
+.zfp-confirm-elim {
+  background: rgba(220,38,38,0.08);
+  border: 1px solid rgba(220,38,38,0.25);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.zfp-confirm-elim p { font-size: 0.8rem; color: #f87171; margin: 0; line-height: 1.4; }
+
+.zfp-btn-elim-confirm {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Footer */
+.zfp-footer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+.zfp-btn-cancelar {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.5);
+  padding: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.85rem;
+}
+.zfp-btn-guardar {
+  flex: 2;
+  background: var(--naranja);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.zfp-btn-guardar:hover:not(:disabled) { opacity: 0.88; }
+.zfp-btn-guardar:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ─── ZonaSelector (carrito cliente) ───────────────────────── */
+.zona-auto__buscando {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  padding: 6px 0;
+}
+.zona-auto__spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-top-color: var(--naranja);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+.zona-auto__no-encontrada {
+  font-size: 0.78rem;
+  color: #fbbf24;
+  margin: 0 0 6px;
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .gz-contenido { flex-direction: column; }
+  .zfp-root {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    max-height: 55vh;
+  }
+  .mapa-zonas-container { min-height: 300px; }
+  .mapa-zonas-hint { font-size: 0.75rem; white-space: normal; text-align: center; flex-direction: column; }
+}

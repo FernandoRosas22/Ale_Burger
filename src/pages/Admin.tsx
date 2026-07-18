@@ -23,6 +23,7 @@ import { useStore } from "@/context/StoreContext";
 import { whatsappLink } from "@/utils/contact";
 import GestionProductos from "@/components/productos/GestionProductos";
 import ConfigPanel from "@/components/productos/ConfigPanel";
+import GestionZonas from "@/components/zonas/GestionZonas";
 import "@/styles/store-status.css";
 import "@/styles/admin.css";
 import "@/styles/productos.css";
@@ -235,7 +236,7 @@ export default function Admin() {
   const [modalCierre, setModalCierre]     = useState(false);
   const [cerrandoCaja, setCerrandoCaja]   = useState(false);
   const [cierreMsj, setCierreMsj]         = useState("");
-  const [vistaActual, setVistaActual] = useState<"comandas" | "productos" | "config">("comandas");
+  const [vistaActual, setVistaActual] = useState<"comandas" | "productos" | "config" | "zonas">("comandas");
 
   // Solo pedidos NO archivados — realtime
   useEffect(() => {
@@ -321,6 +322,12 @@ export default function Admin() {
           >
             ⚙️ Config
           </button>
+          <button
+            className={`adm-tab${vistaActual === "zonas" ? " adm-tab--activo" : ""}`}
+            onClick={() => setVistaActual("zonas")}
+          >
+            🗺 Zonas
+          </button>
         </div>
 
         {/* Toggle abierto/cerrado */}
@@ -356,6 +363,7 @@ export default function Admin() {
       {/* Vista: Productos */}
       {vistaActual === "productos" && <GestionProductos />}
       {vistaActual === "config"    && <ConfigPanel />}
+      {vistaActual === "zonas"     && <GestionZonas />}
 
       {vistaActual === "comandas" && <>
       {/* Banner mensaje post-cierre */}

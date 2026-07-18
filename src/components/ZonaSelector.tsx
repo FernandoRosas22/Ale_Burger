@@ -1,51 +1,72 @@
 // ============================================================
-// ZonaSelector.tsx — Dirección + selector de zona siempre visible
+// ZonaSelector.tsx — Detección automática de zona por polígono
+// Geocodifica la dirección → punto → ray-casting en polígonos
 // ============================================================
 
-import { useState } from "react";
-import { ZONAS, SIN_ZONA, detectarZona } from "@/data/zonas";
+import { useState, useEffect, useRef } from "react";
+import { useZonas } from "@/hooks/useZonas";
+import { geocodificarDireccion } from "@/services/zonas.service";
+import { detectarZonaPorPunto, zonaPoligonoToZona } from "@/types/zona.types";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
+
+const SIN_ZONA_BASE = { id: "sin_zona", nombre: "Retiro en local", costo: 0, color: "#999", barrios: [] };
 
 export default function ZonaSelector() {
   const { setZonaEnvio } = useCarrito();
+  const { zonas } = useZonas(true); // solo activas
+
   const [direccion,     setDireccion]     = useState("");
-  const [zonaDetectada, setZonaDetectada] = useState<typeof SIN_ZONA | null>(null);
+  const [estado,        setEstado]        = useState<"idle"|"buscando"|"encontrada"|"no_encontrada">("idle");
+  const [zonaDetectada, setZonaDetectada] = useState<any>(null);
   const [zonaManual,    setZonaManual]    = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleDireccion = (val: string) => {
     setDireccion(val);
-    // Intentar detección automática
-    if (val.trim().length >= 4) {
-      const zona = detectarZona(val);
+    setZonaDetectada(null);
+    setZonaManual("");
+    setZonaEnvio(SIN_ZONA_BASE);
+
+    if (val.trim().length < 6) { setEstado("idle"); return; }
+
+    // Debounce 800ms para respetar rate limit de Nominatim
+    clearTimeout(debounceRef.current);
+    setEstado("buscando");
+    debounceRef.current = setTimeout(async () => {
+      const coords = await geocodificarDireccion(val);
+      if (!coords) { setEstado("no_encontrada"); return; }
+
+      const zona = detectarZonaPorPunto(coords, zonas);
       if (zona) {
-        setZonaDetectada(zona);
+        const zonaBase = zonaPoligonoToZona(zona);
+        setZonaDetectada(zonaBase);
+        setZonaEnvio(zonaBase);
         setZonaManual(zona.id);
-        setZonaEnvio(zona);
-        return;
+        setEstado("encontrada");
+      } else {
+        setEstado("no_encontrada");
       }
-    }
-    // Si no detecta, respetar la selección manual si ya eligió
-    if (!zonaManual) {
-      setZonaDetectada(null);
-      setZonaEnvio(SIN_ZONA);
-    }
+    }, 800);
   };
 
   const handleManual = (id: string) => {
     setZonaManual(id);
-    const zona = ZONAS.find((z) => z.id === id);
+    const zona = zonas.find((z) => z.id === id);
     if (zona) {
-      setZonaDetectada(zona);
-      setZonaEnvio(zona);
+      const zonaBase = zonaPoligonoToZona(zona);
+      setZonaDetectada(zonaBase);
+      setZonaEnvio(zonaBase);
+      setEstado("encontrada");
     }
   };
 
+  useEffect(() => () => clearTimeout(debounceRef.current), []);
+
   return (
     <div className="zona-auto">
-      {/* Campo de dirección */}
       <label className="zona-auto__label">📍 Tu dirección de entrega</label>
       <input
-        className={`zona-auto__input${zonaDetectada ? " zona-auto__input--ok" : ""}`}
+        className={`zona-auto__input${estado === "encontrada" ? " zona-auto__input--ok" : ""}${estado === "no_encontrada" ? " zona-auto__input--warn" : ""}`}
         type="text"
         placeholder="Ej: Génova 498, Agustín Ferrari..."
         value={direccion}
@@ -53,38 +74,53 @@ export default function ZonaSelector() {
         autoComplete="street-address"
       />
 
-      {/* Selector de zona — SIEMPRE VISIBLE para delivery */}
-      <div className="zona-auto__selector-wrap">
-        <label className="zona-auto__label" style={{ marginTop: 4 }}>
-          🗺 Zona de entrega
-          {!zonaManual && <span className="zona-auto__requerido"> * Elegí tu zona</span>}
-        </label>
-        <div className="zona-auto__grid">
-          {ZONAS.map((z) => (
-            <button
-              key={z.id}
-              type="button"
-              className={`zona-auto__chip${zonaManual === z.id ? " zona-auto__chip--activo" : ""}`}
-              style={zonaManual === z.id ? { borderColor: z.color, background: z.color + "22" } : {}}
-              onClick={() => handleManual(z.id)}
-            >
-              <span className="zona-auto__chip-dot" style={{ background: z.color }} />
-              <span className="zona-auto__chip-nombre">{z.nombre}</span>
-              <span className="zona-auto__chip-precio">{formatPrecio(z.costo)}</span>
-            </button>
-          ))}
+      {/* Buscando */}
+      {estado === "buscando" && (
+        <div className="zona-auto__buscando">
+          <div className="zona-auto__spinner" /> Detectando zona...
         </div>
-      </div>
+      )}
 
-      {/* Zona confirmada */}
-      {zonaDetectada && (
+      {/* Zona detectada automáticamente */}
+      {estado === "encontrada" && zonaDetectada && (
         <div className="zona-auto__resultado" style={{ borderColor: zonaDetectada.color }}>
           <span className="zona-auto__dot" style={{ background: zonaDetectada.color }} />
           <div className="zona-auto__info">
-            <span className="zona-auto__nombre">{zonaDetectada.nombre} ✓</span>
+            <span className="zona-auto__nombre">✓ {zonaDetectada.nombre}</span>
             <span className="zona-auto__costo">
-              Costo de envío: <strong>{formatPrecio(zonaDetectada.costo)}</strong>
+              Envío: <strong>{formatPrecio(zonaDetectada.costo)}</strong>
             </span>
+          </div>
+        </div>
+      )}
+
+      {/* No detectada: mostrar selector manual */}
+      {(estado === "no_encontrada" || (zonas.length > 0 && estado === "idle")) && (
+        <div className="zona-auto__selector-wrap">
+          {estado === "no_encontrada" && (
+            <p className="zona-auto__no-encontrada">
+              ⚠️ No pudimos detectar tu zona. Elegila manualmente:
+            </p>
+          )}
+          {estado === "idle" && zonas.length > 0 && (
+            <label className="zona-auto__label" style={{ marginTop: 4 }}>
+              🗺 O elegí tu zona directamente:
+            </label>
+          )}
+          <div className="zona-auto__grid">
+            {zonas.map((z) => (
+              <button
+                key={z.id}
+                type="button"
+                className={`zona-auto__chip${zonaManual === z.id ? " zona-auto__chip--activo" : ""}`}
+                style={zonaManual === z.id ? { borderColor: z.color, background: z.color + "22" } : {}}
+                onClick={() => handleManual(z.id)}
+              >
+                <span className="zona-auto__chip-dot" style={{ background: z.color }} />
+                <span className="zona-auto__chip-nombre">{z.name}</span>
+                <span className="zona-auto__chip-precio">{formatPrecio(z.cost)}</span>
+              </button>
+            ))}
           </div>
         </div>
       )}

@@ -7,6 +7,10 @@ import "./styles/carrito.css";
 import "./styles/product-modal.css";
 import "./styles/checkout-modal.css";
 import "./styles/store-status.css";
+import "./styles/productos.css";
+import "./styles/zonas.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
