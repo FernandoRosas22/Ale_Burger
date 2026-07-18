@@ -3,8 +3,8 @@
 // Plan gratuito: 25GB storage, 25GB bandwidth/mes
 // ============================================================
 
-const CLOUD_NAME   = "aleburgers";   // ← vas a configurar esto
-const UPLOAD_PRESET = "aleburgers_productos"; // ← preset unsigned
+const CLOUD_NAME    = "s8px89tm";
+const UPLOAD_PRESET = "productos de hamburguesas de cerveza";
 
 const MAX_DIMENSION = 900;
 const JPEG_QUALITY  = 0.85;

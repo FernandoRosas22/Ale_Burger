@@ -22,6 +22,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
 import { whatsappLink } from "@/utils/contact";
 import GestionProductos from "@/components/productos/GestionProductos";
+import ConfigPanel from "@/components/productos/ConfigPanel";
 import "@/styles/store-status.css";
 import "@/styles/admin.css";
 import "@/styles/productos.css";
@@ -234,7 +235,7 @@ export default function Admin() {
   const [modalCierre, setModalCierre]     = useState(false);
   const [cerrandoCaja, setCerrandoCaja]   = useState(false);
   const [cierreMsj, setCierreMsj]         = useState("");
-  const [vistaActual, setVistaActual]     = useState<"comandas" | "productos">("comandas");
+  const [vistaActual, setVistaActual] = useState<"comandas" | "productos" | "config">("comandas");
 
   // Solo pedidos NO archivados — realtime
   useEffect(() => {
@@ -314,6 +315,12 @@ export default function Admin() {
           >
             🛍 Productos
           </button>
+          <button
+            className={`adm-tab${vistaActual === "config" ? " adm-tab--activo" : ""}`}
+            onClick={() => setVistaActual("config")}
+          >
+            ⚙️ Config
+          </button>
         </div>
 
         {/* Toggle abierto/cerrado */}
@@ -348,6 +355,7 @@ export default function Admin() {
 
       {/* Vista: Productos */}
       {vistaActual === "productos" && <GestionProductos />}
+      {vistaActual === "config"    && <ConfigPanel />}
 
       {vistaActual === "comandas" && <>
       {/* Banner mensaje post-cierre */}

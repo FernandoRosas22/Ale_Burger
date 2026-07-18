@@ -1,9 +1,10 @@
 // ============================================================
-// MenuSection.tsx — Lee productos de Firestore en tiempo real
-// Fallback al menu.ts hardcodeado si Firestore está vacío
+// MenuSection.tsx — Lee productos Y banner desde Firestore
 // ============================================================
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase";
 import { useProductos } from "@/hooks/useProductos";
 import { menu } from "@/data/menu";
 import type { MenuItem } from "@/data/menu";
@@ -11,28 +12,50 @@ import { CATEGORIAS, productoToMenuItem } from "@/types/producto.types";
 import MenuCard from "./MenuCard";
 import ProductModal from "./ProductModal";
 
+interface ConfigLocal {
+  bannerActivo:   boolean;
+  bannerEmoji:    string;
+  bannerDestaque: string;
+  bannerSub:      string;
+}
+
+const BANNER_DEFECTO: ConfigLocal = {
+  bannerActivo:   true,
+  bannerEmoji:    "🎉",
+  bannerDestaque: "10% OFF",
+  bannerSub:      "pagando en efectivo, todos los días",
+};
+
 export default function MenuSection() {
   const [itemSeleccionado, setItemSeleccionado] = useState<MenuItem | null>(null);
-  const [modalAbierto, setModalAbierto]         = useState(false);
-  const { productos, cargando }                 = useProductos({ soloVisibles: true });
+  const [modalAbierto,     setModalAbierto]     = useState(false);
+  const [banner,           setBanner]           = useState<ConfigLocal>(BANNER_DEFECTO);
+  const { productos, cargando } = useProductos({ soloVisibles: true });
 
-  const abrirModal = (item: MenuItem) => { setItemSeleccionado(item); setModalAbierto(true); };
+  // Escuchar banner en tiempo real desde Firestore
+  useEffect(() => {
+    const ref = doc(db, "settings", "config");
+    const unsub = onSnapshot(ref, (snap) => {
+      if (snap.exists()) setBanner({ ...BANNER_DEFECTO, ...snap.data() as ConfigLocal });
+    });
+    return () => unsub();
+  }, []);
+
+  const abrirModal  = (item: MenuItem) => { setItemSeleccionado(item); setModalAbierto(true); };
   const cerrarModal = () => { setModalAbierto(false); setTimeout(() => setItemSeleccionado(null), 350); };
 
-  // ── Si hay productos en Firestore, usarlos; si no, usar menu.ts ──
+  // Si hay productos en Firestore usarlos, sino fallback a menu.ts
   const usandoFirestore = !cargando && productos.length > 0;
 
-  // Agrupar productos de Firestore por categoría
   const categorias = usandoFirestore
     ? Object.entries(CATEGORIAS)
-        .map(([catId, titulo]) => {
-          const items = productos
-            .filter((p) => p.category === catId && p.available)
-            .map(productoToMenuItem);
-          return { id: catId, titulo, items };
-        })
+        .map(([catId, titulo]) => ({
+          id: catId,
+          titulo,
+          items: productos.filter((p) => p.category === catId).map(productoToMenuItem),
+        }))
         .filter((c) => c.items.length > 0)
-    : menu; // fallback al hardcodeado
+    : menu;
 
   return (
     <section id="menu" className="ab-section">
@@ -40,11 +63,16 @@ export default function MenuSection() {
         <p className="ab-section-tag">Lo que hacemos</p>
         <h2 className="ab-section-title">NUESTRO <span>MENÚ</span></h2>
         <p>Burgers smasheadas, combos, bebidas y acompañamientos. Todo artesanal, hecho al momento.</p>
-        <div className="ab-promo-banner">
-          <span>🎉</span>
-          <strong>10% OFF</strong>
-          <span>pagando en efectivo, todos los días</span>
-        </div>
+
+        {/* Banner dinámico desde Firestore */}
+        {banner.bannerActivo && (
+          <div className="ab-promo-banner">
+            {banner.bannerEmoji && <span>{banner.bannerEmoji}</span>}
+            {banner.bannerDestaque && <strong>{banner.bannerDestaque}</strong>}
+            {banner.bannerSub && <span>{banner.bannerSub}</span>}
+          </div>
+        )}
+
         <nav className="ab-cat-nav" aria-label="Categorías del menú">
           {categorias.map((c) => (
             <a key={c.id} href={`#cat-${c.id}`}>{c.titulo}</a>
