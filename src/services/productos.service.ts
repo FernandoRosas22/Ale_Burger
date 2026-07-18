@@ -38,11 +38,16 @@ export function escucharProductos(
 
 // ─── Crear producto ───────────────────────────────────────────
 export async function crearProducto(form: FormProducto): Promise<string> {
-  const ref = await addDoc(collection(db, COL), {
+  // Firestore no acepta undefined — convertir a null
+  const data = {
     ...form,
+    priceOld: form.priceOld ?? null,
+    tag:      form.tag ?? "",
+    emoji:    form.emoji ?? "🍔",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
-  });
+  };
+  const ref = await addDoc(collection(db, COL), data);
   return ref.id;
 }
 
@@ -51,8 +56,11 @@ export async function actualizarProducto(
   id: string,
   data: Partial<FormProducto>
 ): Promise<void> {
+  const limpio = Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [k, v === undefined ? null : v])
+  );
   await updateDoc(doc(db, COL, id), {
-    ...data,
+    ...limpio,
     updatedAt: serverTimestamp(),
   });
 }
