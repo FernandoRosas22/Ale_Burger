@@ -524,3 +524,112 @@
 .carrito-btn-wsp:hover {
   background: rgba(37, 211, 102, 0.1);
 }
+
+/* ─── ZonaSelector automático ───────────────────────────────── */
+.zona-auto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.zona-auto__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.zona-auto__input {
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  color: #fff;
+  padding: 11px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.zona-auto__input::placeholder { color: rgba(255,255,255,0.25); }
+.zona-auto__input:focus        { border-color: var(--naranja); }
+.zona-auto__input--ok          { border-color: #25d366 !important; }
+.zona-auto__input--warn        { border-color: #f59e0b !important; }
+
+/* Zona detectada */
+.zona-auto__resultado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(37,211,102,0.07);
+  border: 1.5px solid #25d366;
+  border-radius: 10px;
+  padding: 10px 14px;
+  animation: carrito-slide-in 0.2s ease;
+}
+
+.zona-auto__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.zona-auto__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.zona-auto__nombre {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.zona-auto__costo {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+}
+.zona-auto__costo strong { color: var(--naranja); }
+
+.zona-auto__ok {
+  color: #25d366;
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+/* Fallback manual */
+.zona-auto__fallback {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.zona-auto__fallback p {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  margin: 0;
+}
+
+.zona-auto__select {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: #fff;
+  padding: 9px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+.zona-auto__select option { background: #1a1a1a; }
