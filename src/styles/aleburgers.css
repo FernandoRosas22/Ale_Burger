@@ -222,3 +222,59 @@ body {
 .carrito-resumen__fila { display: flex; justify-content: space-between; font-size: 14px; color: rgba(255,255,255,.65); }
 .carrito-resumen__fila--total { font-size: 18px; font-weight: 900; color: #fff; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.1); margin-top: 4px; }
 .carrito-resumen__fila--total span:last-child { color: var(--naranja); }
+
+/* ── Tira de promos/descuentos bajo el banner ─────────────── */
+.ab-promos-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.ab-promo-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 10px 16px;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.ab-promo-chip:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(249, 115, 22, 0.07);
+}
+
+.ab-promo-chip-emoji {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.ab-promo-chip-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.ab-promo-chip-info strong {
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.ab-promo-chip-info span {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+  .ab-promos-strip { flex-direction: column; align-items: center; }
+  .ab-promo-chip   { width: 100%; max-width: 320px; }
+}

@@ -17,6 +17,7 @@ interface ConfigLocal {
   bannerEmoji:    string;
   bannerDestaque: string;
   bannerSub:      string;
+  descuentos?: { activo: boolean; emoji: string; titulo: string; descripcion: string }[];
 }
 
 const BANNER_DEFECTO: ConfigLocal = {
@@ -24,6 +25,7 @@ const BANNER_DEFECTO: ConfigLocal = {
   bannerEmoji:    "🎉",
   bannerDestaque: "10% OFF",
   bannerSub:      "pagando en efectivo, todos los días",
+  descuentos:     [],
 };
 
 export default function MenuSection() {
@@ -70,6 +72,21 @@ export default function MenuSection() {
             {banner.bannerEmoji && <span>{banner.bannerEmoji}</span>}
             {banner.bannerDestaque && <strong>{banner.bannerDestaque}</strong>}
             {banner.bannerSub && <span>{banner.bannerSub}</span>}
+          </div>
+        )}
+
+        {/* Descuentos y promos activos */}
+        {(banner.descuentos ?? []).filter((d) => d.activo).length > 0 && (
+          <div className="ab-promos-strip">
+            {(banner.descuentos ?? []).filter((d) => d.activo).map((d, i) => (
+              <div key={i} className="ab-promo-chip">
+                <span className="ab-promo-chip-emoji">{d.emoji}</span>
+                <div className="ab-promo-chip-info">
+                  <strong>{d.titulo}</strong>
+                  {d.descripcion && <span>{d.descripcion}</span>}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
