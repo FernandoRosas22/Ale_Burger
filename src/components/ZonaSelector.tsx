@@ -94,19 +94,12 @@ export default function ZonaSelector() {
         </div>
       )}
 
-      {/* No detectada: mostrar selector manual */}
-      {(estado === "no_encontrada" || (zonas.length > 0 && estado === "idle")) && (
+      {/* No detectada: mostrar selector manual (solo DESPUÉS de intentar buscar) */}
+      {estado === "no_encontrada" && (
         <div className="zona-auto__selector-wrap">
-          {estado === "no_encontrada" && (
-            <p className="zona-auto__no-encontrada">
-              ⚠️ No pudimos detectar tu zona. Elegila manualmente:
-            </p>
-          )}
-          {estado === "idle" && zonas.length > 0 && (
-            <label className="zona-auto__label" style={{ marginTop: 4 }}>
-              🗺 O elegí tu zona directamente:
-            </label>
-          )}
+          <p className="zona-auto__no-encontrada">
+            ⚠️ No pudimos detectar tu zona automáticamente. Elegila de la lista:
+          </p>
           <div className="zona-auto__grid">
             {zonas.map((z) => (
               <button
