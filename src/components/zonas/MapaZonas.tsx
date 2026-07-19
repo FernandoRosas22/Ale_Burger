@@ -3,21 +3,9 @@
 // ============================================================
 
 import { useEffect, useRef } from "react";
-import * as L from "leaflet";
+import L from "@/lib/leafletSetup"; // ← DEBE ir antes que "leaflet-draw"
 import "leaflet-draw";
 import type { ZonaPoligono, LatLng } from "@/types/zona.types";
-
-// leaflet-draw es un plugin "clásico" que espera `L` en window.
-// Sin esta línea, leaflet-draw falla silenciosamente y el mapa no funciona.
-(window as any).L = L;
-
-// Fix íconos de Leaflet en Vite (rutas rotas por defecto)
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl:       "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
 
 // Coordenadas reales de AleBurgers (mismas del mapa embebido en contact.ts)
 const CENTER: [number, number] = [-34.7205088, -58.7947361];
@@ -53,28 +41,32 @@ export default function MapaZonas({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const map = L.map(containerRef.current, {
-      center: CENTER,
-      zoom: ZOOM_INICIAL,
-      zoomControl: true,
-    });
+    let map: L.Map;
+    try {
+      map = L.map(containerRef.current, {
+        center: CENTER,
+        zoom: ZOOM_INICIAL,
+        zoomControl: true,
+      });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
-    }).addTo(map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+      }).addTo(map);
 
-    // Marcador de referencia del local
-    L.marker(CENTER).addTo(map).bindPopup("📍 AleBurgers (local)");
+      L.marker(CENTER).addTo(map).bindPopup("📍 AleBurgers (local)");
 
-    mapRef.current = map;
-
-    // Forzar recalculo de tamaño (bug común: mapa gris hasta hacer resize)
-    setTimeout(() => map.invalidateSize(), 150);
+      mapRef.current = map;
+      setTimeout(() => map.invalidateSize(), 150);
+    } catch (err) {
+      console.error("Error inicializando el mapa de zonas:", err);
+    }
 
     return () => {
-      map.remove();
-      mapRef.current = null;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
     };
   }, []);
 
@@ -83,7 +75,6 @@ export default function MapaZonas({
     const map = mapRef.current;
     if (!map) return;
 
-    // Limpiar capas previas (excepto la que está en edición activa)
     layersRef.current.forEach((layer, id) => {
       if (id !== zonaSeleccionada?.id || !editGroupRef.current) {
         map.removeLayer(layer);
@@ -92,7 +83,7 @@ export default function MapaZonas({
     layersRef.current.clear();
 
     zonas.forEach((zona) => {
-      if (zona.vertices.length < 3) return;
+      if (!zona.vertices || zona.vertices.length < 3) return;
       if (zona.id === zonaSeleccionada?.id && editGroupRef.current) return;
 
       const latlngs = zona.vertices.map((v) => L.latLng(v.lat, v.lng));

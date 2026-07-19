@@ -24,6 +24,7 @@ import { whatsappLink } from "@/utils/contact";
 import GestionProductos from "@/components/productos/GestionProductos";
 import ConfigPanel from "@/components/productos/ConfigPanel";
 import GestionZonas from "@/components/zonas/GestionZonas";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import "@/styles/store-status.css";
 import "@/styles/admin.css";
 import "@/styles/productos.css";
@@ -363,7 +364,11 @@ export default function Admin() {
       {/* Vista: Productos */}
       {vistaActual === "productos" && <GestionProductos />}
       {vistaActual === "config"    && <ConfigPanel />}
-      {vistaActual === "zonas"     && <GestionZonas />}
+      {vistaActual === "zonas"     && (
+        <ErrorBoundary nombre="el mapa de zonas">
+          <GestionZonas />
+        </ErrorBoundary>
+      )}
 
       {vistaActual === "comandas" && <>
       {/* Banner mensaje post-cierre */}

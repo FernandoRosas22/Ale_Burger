@@ -777,3 +777,39 @@
   gap: 12px;
   align-items: flex-end;
 }
+
+/* ─── ErrorBoundary ─────────────────────────────────────────── */
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 24px;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  min-height: 300px;
+}
+.error-boundary-icon { font-size: 2.5rem; }
+.error-boundary h3 { color: #fff; font-size: 1.1rem; margin: 0; }
+.error-boundary-detalle {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+  max-width: 400px;
+  font-family: monospace;
+  background: rgba(255,255,255,0.04);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.error-boundary-btn {
+  background: var(--naranja);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 0.88rem;
+  cursor: pointer;
+  margin-top: 6px;
+}
