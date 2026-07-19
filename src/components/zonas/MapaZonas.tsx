@@ -156,11 +156,11 @@ export default function MapaZonas({
         drawnItemsRef.current = null;
       };
 
-      map.on(L.Draw.Event.CREATED, onCreated);
+      map.on("draw:created" as any, onCreated);
 
       return () => {
         clearTimeout(iniciar);
-        map.off(L.Draw.Event.CREATED, onCreated);
+        map.off("draw:created" as any, onCreated);
         if (drawControlRef.current) {
           try { map.removeControl(drawControlRef.current); } catch {}
           drawControlRef.current = null;
@@ -212,7 +212,8 @@ export default function MapaZonas({
     <div className="mapa-zonas-wrap">
       {modoCrear && (
         <div className="mapa-zonas-hint">
-          🖊 Hacé click en el mapa para trazar los vértices. Doble click para cerrar la figura.
+          🖊 Marcá cada esquina con click. Para <strong>TERMINAR</strong>: hacé doble click
+          en el último punto, o tocá el botón <strong>"Finish"</strong> arriba a la derecha del mapa.
           <button className="mapa-zonas-cancelar" onClick={onCancelarCreacion}>
             Cancelar
           </button>
