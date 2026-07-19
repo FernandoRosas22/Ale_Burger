@@ -6,6 +6,7 @@ import { useState, lazy, Suspense } from "react";
 import { useZonas } from "@/hooks/useZonas";
 import { actualizarZona, duplicarZona, toggleZonaActiva, eliminarZona } from "@/services/zonas.service";
 import ZonaFormPanel from "./ZonaFormPanel";
+import SembrarZonas from "./SembrarZonas";
 import ToastNotif, { useToasts } from "@/components/productos/ToastNotif";
 import type { ZonaPoligono, LatLng } from "@/types/zona.types";
 import { formatPrecio } from "@/context/CarritoContext";
@@ -15,6 +16,8 @@ const MapaZonas = lazy(() => import("./MapaZonas"));
 
 export default function GestionZonas() {
   const { zonas, cargando, error } = useZonas();
+  const [sembrado, setSembrado] = useState(false);
+  const mostrarSiembra = !cargando && !error && zonas.length === 0 && !sembrado;
   const { toasts, agregar, quitar } = useToasts();
 
   const [zonaSeleccionada,  setZonaSeleccionada]  = useState<ZonaPoligono | null>(null);
@@ -108,6 +111,13 @@ export default function GestionZonas() {
         <div className="gz-stat"><span className="gz-stat-n gz-stat-n--ok">{zonas.filter(z=>z.active).length}</span><span>Activas</span></div>
         <div className="gz-stat"><span className="gz-stat-n gz-stat-n--warn">{zonas.filter(z=>!z.active).length}</span><span>Inactivas</span></div>
       </div>
+
+      {/* ── Precarga inicial de zonas (solo si no hay ninguna) ── */}
+      {mostrarSiembra && (
+        <div style={{ padding: "0 16px" }}>
+          <SembrarZonas onListo={() => setSembrado(true)} />
+        </div>
+      )}
 
       {/* ── Contenido principal ── */}
       <div className="gz-contenido">
