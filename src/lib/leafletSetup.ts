@@ -1,13 +1,17 @@
 // ============================================================
 // leafletSetup.ts — Debe importarse SIEMPRE antes que "leaflet-draw"
-// leaflet-draw es un plugin clásico que busca `L` en window global.
-// Este módulo garantiza que window.L exista antes de que se ejecute
-// el código de leaflet-draw (el orden de imports de ES modules lo
-// permite: este módulo se resuelve y ejecuta completo antes que
-// cualquier import posterior en el archivo que lo usa).
+//
+// IMPORTANTE: se usa `import L from "leaflet"` (default import), NO
+// `import * as L from "leaflet"`. La razón: `import * as L` crea un
+// objeto de namespace de ES Modules, que el motor de JS congela
+// (no-extensible) por especificación. leaflet-draw necesita agregar
+// propiedades nuevas a L (ej. L.drawVersion), y con el namespace
+// congelado eso lanza: "Cannot add property drawVersion, object is
+// not extensible". El import por defecto entrega el objeto real de
+// Leaflet (mutable), evitando el problema.
 // ============================================================
 
-import * as L from "leaflet";
+import L from "leaflet";
 
 (window as any).L = L;
 
