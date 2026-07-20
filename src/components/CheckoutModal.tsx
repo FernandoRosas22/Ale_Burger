@@ -50,7 +50,7 @@ function validar(form: FormCheckout): ErroresCheckout {
 
 // ─── Componente ───────────────────────────────────────────────
 export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
-  const { items, subtotal, vaciarCarrito, cerrarCarrito } = useCarrito();
+  const { items, subtotal, costoEnvio, zonaEnvio, vaciarCarrito, cerrarCarrito, direccionEnvio } = useCarrito();
   const { abierto } = useStore();
 
   const [form, setForm]         = useState<FormCheckout>(FORM_CHECKOUT_INICIAL);
@@ -59,10 +59,10 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const [pedidoId, setPedidoId] = useState<string>("");
   const [errorMsg, setErrorMsg]   = useState<string>("");
 
-  // Reset al abrir
+  // Reset al abrir — pre-carga la dirección ya escrita en el carrito
   useEffect(() => {
     if (isOpen) {
-      setForm(FORM_CHECKOUT_INICIAL);
+      setForm({ ...FORM_CHECKOUT_INICIAL, direccion: direccionEnvio || "" });
       setErrores({});
       setPaso("form");
       setPedidoId("");
@@ -78,10 +78,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     return () => document.removeEventListener("keydown", fn);
   }, [isOpen, paso, onClose]);
 
-  // ── Precio calculado ──
-  const descuentoPct  = form.metodoPago === "efectivo" ? 10 : 0;
+  // ── Precio calculado (el descuento en efectivo aplica solo al subtotal, no al envío) ──
+  const descuentoPct   = form.metodoPago === "efectivo" ? 10 : 0;
   const montoDescuento = Math.round(subtotal * descuentoPct / 100);
-  const total          = subtotal - montoDescuento;
+  const envioAplicado  = form.tipoEntrega === "retiro" ? 0 : costoEnvio;
+  const total          = subtotal - montoDescuento + envioAplicado;
 
   // ── Handlers ──
   const setField = <K extends keyof FormCheckout>(key: K, val: FormCheckout[K]) => {
@@ -127,10 +128,13 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
           tipoEntrega:            form.tipoEntrega,
           metodoPago:             form.metodoPago,
           observacionesGenerales: form.observacionesGenerales?.trim() || "",
+          zonaEnvio:              form.tipoEntrega === "retiro" ? "" : (zonaEnvio?.nombre || ""),
+          costoEnvio:             envioAplicado,
         },
         items:    serializarItems(itemsPedido) as ItemPedido[],
         subtotal,
         descuento: montoDescuento,
+        costoEnvio: envioAplicado,
         total,
         estado:   "pendiente",
         fechaCreacion: new Date().toISOString(),

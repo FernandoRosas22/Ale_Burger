@@ -12,17 +12,16 @@ import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 const SIN_ZONA_BASE = { id: "sin_zona", nombre: "Retiro en local", costo: 0, color: "#999", barrios: [] };
 
 export default function ZonaSelector() {
-  const { setZonaEnvio } = useCarrito();
+  const { setZonaEnvio, direccionEnvio, setDireccionEnvio } = useCarrito();
   const { zonas } = useZonas(true); // solo activas
 
-  const [direccion,     setDireccion]     = useState("");
   const [estado,        setEstado]        = useState<"idle"|"buscando"|"encontrada"|"no_encontrada">("idle");
   const [zonaDetectada, setZonaDetectada] = useState<any>(null);
   const [zonaManual,    setZonaManual]    = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleDireccion = (val: string) => {
-    setDireccion(val);
+    setDireccionEnvio(val);
     setZonaDetectada(null);
     setZonaManual("");
     setZonaEnvio(SIN_ZONA_BASE);
@@ -69,7 +68,7 @@ export default function ZonaSelector() {
         className={`zona-auto__input${estado === "encontrada" ? " zona-auto__input--ok" : ""}${estado === "no_encontrada" ? " zona-auto__input--warn" : ""}`}
         type="text"
         placeholder="Ej: Génova 498, Agustín Ferrari..."
-        value={direccion}
+        value={direccionEnvio}
         onChange={(e) => handleDireccion(e.target.value)}
         autoComplete="street-address"
       />

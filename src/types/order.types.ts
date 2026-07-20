@@ -35,6 +35,8 @@ export interface DatosCliente {
   tipoEntrega: TipoEntrega;
   metodoPago: MetodoPago;
   observacionesGenerales: string;
+  zonaEnvio?: string;
+  costoEnvio?: number;
 }
 
 // ─── Ítem guardado en Firestore ───────────────────────────────
@@ -56,6 +58,7 @@ export interface Pedido {
   items: ItemPedido[];
   subtotal: number;
   descuento: number;
+  costoEnvio?: number;
   total: number;
   estado: EstadoPedido;
   fechaCreacion: string;

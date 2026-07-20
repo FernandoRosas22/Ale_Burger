@@ -156,7 +156,10 @@ function Comanda({ pedido, onCambiarEstado }: {
           {pago && <> · {pago.emoji} {pago.label}</>}
         </span>
         {pedido.cliente?.tipoEntrega === "delivery" && pedido.cliente?.direccion && (
-          <span className="cmd-dir">📍 {pedido.cliente.direccion}</span>
+          <span className="cmd-dir">
+            📍 {pedido.cliente.direccion}
+            {pedido.cliente?.zonaEnvio && <> · 🗺 {pedido.cliente.zonaEnvio}</>}
+          </span>
         )}
         {pedido.cliente?.observacionesGenerales && (
           <span className="cmd-obs-gral">💬 {pedido.cliente.observacionesGenerales}</span>
@@ -195,6 +198,11 @@ function Comanda({ pedido, onCambiarEstado }: {
         {pedido.descuento > 0 && (
           <div className="cmd-total-row cmd-total-row--desc">
             <span>Descuento</span><span>−{formatPrecio(pedido.descuento)}</span>
+          </div>
+        )}
+        {(pedido.costoEnvio ?? 0) > 0 && (
+          <div className="cmd-total-row">
+            <span>Envío</span><span>{formatPrecio(pedido.costoEnvio ?? 0)}</span>
           </div>
         )}
         <div className="cmd-total-row cmd-total-row--final">

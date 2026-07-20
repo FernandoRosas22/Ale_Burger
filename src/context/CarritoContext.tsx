@@ -25,6 +25,7 @@ interface EstadoCarrito {
   items: ProductoCarrito[];
   abierto: boolean;
   zonaEnvio: Zona;
+  direccionEnvio: string;
 }
 
 type AccionCarrito =
@@ -34,7 +35,8 @@ type AccionCarrito =
   | { type: "VACIAR" }
   | { type: "TOGGLE_CARRITO" }
   | { type: "CERRAR_CARRITO" }
-  | { type: "SET_ZONA"; zona: Zona };
+  | { type: "SET_ZONA"; zona: Zona }
+  | { type: "SET_DIRECCION"; direccion: string };
 
 interface ContextoCarrito {
   items: ProductoCarrito[];
@@ -44,6 +46,7 @@ interface ContextoCarrito {
   costoEnvio: number;
   total: number;
   zonaEnvio: Zona;
+  direccionEnvio: string;
   agregarAlCarrito: (menuItem: MenuItem, personalizacion: PersonalizacionItem, cantidad: number, precioUnitario: number) => void;
   quitarUno: (cartId: string) => void;
   eliminarItem: (cartId: string) => void;
@@ -51,6 +54,7 @@ interface ContextoCarrito {
   toggleCarrito: () => void;
   cerrarCarrito: () => void;
   setZonaEnvio: (zona: Zona) => void;
+  setDireccionEnvio: (direccion: string) => void;
 }
 
 const STORAGE_KEY = "aleburgers_carrito_v2";
@@ -87,6 +91,9 @@ function carritoReducer(estado: EstadoCarrito, accion: AccionCarrito): EstadoCar
     case "SET_ZONA":
       return { ...estado, zonaEnvio: accion.zona };
 
+    case "SET_DIRECCION":
+      return { ...estado, direccionEnvio: accion.direccion };
+
     default:
       return estado;
   }
@@ -95,9 +102,9 @@ function carritoReducer(estado: EstadoCarrito, accion: AccionCarrito): EstadoCar
 function cargarDesdeStorage(): EstadoCarrito {
   try {
     const guardado = localStorage.getItem(STORAGE_KEY);
-    if (guardado) return { items: JSON.parse(guardado), abierto: false, zonaEnvio: SIN_ZONA };
+    if (guardado) return { items: JSON.parse(guardado), abierto: false, zonaEnvio: SIN_ZONA, direccionEnvio: "" };
   } catch { /* ignorar */ }
-  return { items: [], abierto: false, zonaEnvio: SIN_ZONA };
+  return { items: [], abierto: false, zonaEnvio: SIN_ZONA, direccionEnvio: "" };
 }
 
 export function parsePrecio(precioStr: string): number {
@@ -171,6 +178,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
         costoEnvio,
         total,
         zonaEnvio: estado.zonaEnvio,
+        direccionEnvio: estado.direccionEnvio,
         agregarAlCarrito,
         quitarUno: (cartId) => dispatch({ type: "QUITAR_UNO", cartId }),
         eliminarItem: (cartId) => dispatch({ type: "ELIMINAR", cartId }),
@@ -178,6 +186,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
         toggleCarrito: () => dispatch({ type: "TOGGLE_CARRITO" }),
         cerrarCarrito: () => dispatch({ type: "CERRAR_CARRITO" }),
         setZonaEnvio: (zona) => dispatch({ type: "SET_ZONA", zona }),
+        setDireccionEnvio: (direccion) => dispatch({ type: "SET_DIRECCION", direccion }),
       }}
     >
       {children}
