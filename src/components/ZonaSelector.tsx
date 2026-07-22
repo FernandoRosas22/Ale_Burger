@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useZonas } from "@/hooks/useZonas";
-import { geocodificarDireccion } from "@/services/zonas.service";
+import { geocodificarDireccion } from "@/services/geocoding.service";
 import { detectarZonaPorPunto, zonaPoligonoToZona } from "@/types/zona.types";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 
@@ -28,7 +28,7 @@ export default function ZonaSelector() {
 
     if (val.trim().length < 6) { setEstado("idle"); return; }
 
-    // Debounce 800ms para respetar rate limit de Nominatim
+    // Debounce 800ms para no disparar una consulta a Google Maps por cada tecla
     clearTimeout(debounceRef.current);
     setEstado("buscando");
     debounceRef.current = setTimeout(async () => {

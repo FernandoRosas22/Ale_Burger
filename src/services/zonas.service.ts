@@ -76,21 +76,3 @@ export async function toggleZonaActiva(id: string, active: boolean): Promise<voi
   await updateDoc(doc(db, COL, id), { active, updatedAt: serverTimestamp() });
 }
 
-// ─── Geocodificación via Nominatim (OpenStreetMap) ────────────
-export async function geocodificarDireccion(
-  direccion: string
-): Promise<{ lat: number; lng: number } | null> {
-  // Agregar contexto geográfico para mejorar precisión
-  const query = encodeURIComponent(`${direccion}, Buenos Aires, Argentina`);
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&countrycodes=ar`,
-      { headers: { "Accept-Language": "es", "User-Agent": "AleBurgers-Delivery/1.0" } }
-    );
-    const data = await res.json();
-    if (data && data.length > 0) {
-      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
-    }
-  } catch { /* red no disponible */ }
-  return null;
-}
