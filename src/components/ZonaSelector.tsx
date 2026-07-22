@@ -116,7 +116,8 @@ export default function ZonaSelector() {
         placeholder="Ej: Génova 498, Agustín Ferrari..."
         value={direccionEnvio}
         onChange={(e) => handleDireccion(e.target.value)}
-        autoComplete="street-address"
+        autoComplete="off"
+        name="direccion-envio-aleburgers"
       />
 
       {/* Buscando */}
