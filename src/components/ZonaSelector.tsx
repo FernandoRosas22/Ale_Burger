@@ -10,11 +10,13 @@ import { geocodificarDireccion } from "@/services/geocoding.service";
 import { detectarZonaPorPunto, zonaPoligonoToZona } from "@/types/zona.types";
 import { useCarrito, formatPrecio } from "@/context/CarritoContext";
 
-// Centro aprox. del Partido de Moreno — sesga las sugerencias de
-// Places sin restringirlas (el cliente puede pedir desde otra localidad).
-const MORENO_BOUNDS = {
-  north: -34.575, south: -34.72,
-  east: -58.72,   west: -58.86,
+// Centro real de AleBurgers (Agustín Ferrari, Merlo) — sesga las
+// sugerencias de Places sin restringirlas (el cliente puede pedir
+// desde otra localidad). Antes decía "MORENO_BOUNDS" y estaba mal
+// centrado: dejaba el propio local casi afuera de la caja.
+const AREA_SERVICIO_BOUNDS = {
+  north: -34.5705, south: -34.8705,
+  east: -58.6447,  west: -58.9447,
 };
 
 const SIN_ZONA_BASE = { id: "sin_zona", nombre: "Retiro en local", costo: 0, color: "#999", barrios: [] };
@@ -67,30 +69,49 @@ export default function ZonaSelector() {
   // Inicializa el widget de Google Places Autocomplete sobre el input.
   // Cuando el usuario elige una sugerencia, ya tenemos lat/lng directo
   // (sin pegarle de nuevo a la Geocoding API) y resolvemos la zona al toque.
+  //
+  // IMPORTANTE: desde marzo 2025, Google bloqueó google.maps.places.Autocomplete
+  // (el widget "clásico") para API keys NUEVAS — solo sigue andando en keys
+  // creadas antes de esa fecha. Si esta key es nueva, el constructor puede
+  // tirar una excepción o no mostrar el desplegable de sugerencias. Por eso
+  // todo el bloque va en try/catch: si falla, no rompe nada — el fallback de
+  // abajo (debounce + Geocoding API por texto) sigue funcionando igual,
+  // porque es un servicio distinto (Geocoding, no Places) y no está afectado
+  // por esta baja.
   useEffect(() => {
     if (!scriptListo || !inputRef.current || autocompleteRef.current) return;
 
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
-      componentRestrictions: { country: "ar" },
-      fields: ["formatted_address", "geometry"],
-      types: ["address"],
-      bounds: MORENO_BOUNDS,
-    });
-    autocompleteRef.current = autocomplete;
+    try {
+      const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
+        componentRestrictions: { country: "ar" },
+        fields: ["formatted_address", "geometry"],
+        types: ["address"],
+        bounds: AREA_SERVICIO_BOUNDS,
+      });
+      autocompleteRef.current = autocomplete;
 
-    const listener = autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      const loc = place.geometry?.location;
-      if (!loc) { setEstado("no_encontrada"); return; }
+      const listener = autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        const loc = place.geometry?.location;
+        if (!loc) { setEstado("no_encontrada"); return; }
 
-      clearTimeout(debounceRef.current);
-      const direccion = place.formatted_address ?? inputRef.current!.value;
-      setDireccionEnvio(direccion);
-      setEstado("buscando");
-      resolverZonaPorCoords({ lat: loc.lat(), lng: loc.lng() });
-    });
+        clearTimeout(debounceRef.current);
+        const direccion = place.formatted_address ?? inputRef.current!.value;
+        setDireccionEnvio(direccion);
+        setEstado("buscando");
+        resolverZonaPorCoords({ lat: loc.lat(), lng: loc.lng() });
+      });
 
-    return () => listener.remove();
+      return () => listener.remove();
+    } catch (e) {
+      console.warn(
+        "[ZonaSelector] El autocomplete visual de Google no está disponible " +
+        "(probablemente por la baja de Google a partir de marzo 2025 para API " +
+        "keys nuevas). No es un problema: el sistema sigue detectando la zona " +
+        "escribiendo la dirección completa y esperando un segundo.",
+        e
+      );
+    }
   }, [scriptListo, zonas]);
 
   const handleManual = (id: string) => {

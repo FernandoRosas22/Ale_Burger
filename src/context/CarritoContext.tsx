@@ -161,7 +161,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
       precioUnitario,
       precioStr: menuItem.precio,
       imagen: menuItem.img,
-      emoji: menuItem.emoji,
+      emoji: menuItem.emoji ?? "🍔",
       cantidad,
       personalizacion,
     };

@@ -27,6 +27,17 @@ export interface Ingrediente {
   nombre: string;
 }
 
+// Extra que el cliente puede sumar a un producto (ej: "Bacon extra", "Queso extra").
+// Hoy no hay ningún flujo de UI que lo cargue con datos reales — siempre llega
+// como array vacío desde ProductModal — pero el tipo tiene que existir porque
+// CarritoContext, Carrito, Admin y el pedido guardado en Firestore ya asumen
+// esta forma para poder mostrar "➕ nombre1, nombre2" si algún día se completa.
+export interface Extra {
+  id: string;
+  nombre: string;
+  precio?: number;
+}
+
 export interface Tamanio {
   id: string;
   nombre: string;

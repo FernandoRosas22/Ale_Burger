@@ -108,7 +108,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       const itemsPedido: ItemPedido[] = items.map((i) => ({
         nombre:         i.nombre ?? "",
         emoji:          i.emoji ?? "",
-        imagen:         i.imagen ?? null,
+        imagen:         i.imagen,
         cantidad:       i.cantidad ?? 1,
         precioBase:     i.precioBase ?? 0,
         precioUnitario: i.precioUnitario ?? 0,

@@ -9,6 +9,13 @@
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
 
+// Mismo recuadro que el sesgo del autocomplete en ZonaSelector.tsx,
+// centrado en AleBurgers (Agustín Ferrari, Merlo). Lo usamos también
+// acá para sesgar la Geocoding API hacia la zona real de reparto —
+// sin esto, "Buenos Aires" en el texto de búsqueda puede confundirse
+// con la Ciudad de Buenos Aires (CABA) en vez del conurbano oeste.
+const AREA_SERVICIO_BOUNDS = "-34.8705,-58.9447|-34.5705,-58.6447"; // sur,oeste|norte,este
+
 export interface ResultadoGeocoding {
   lat: number;
   lng: number;
@@ -40,6 +47,7 @@ export async function geocodificarDireccion(
     `https://maps.googleapis.com/maps/api/geocode/json` +
     `?address=${query}` +
     `&region=ar` +
+    `&bounds=${AREA_SERVICIO_BOUNDS}` +
     `&components=country:AR` +
     `&key=${GOOGLE_MAPS_API_KEY}`;
 
