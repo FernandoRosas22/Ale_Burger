@@ -56,9 +56,10 @@ export async function geocodificarDireccion(
     const data = await res.json();
 
     if (data.status !== "OK" || !data.results?.length) {
-      if (data.status !== "ZERO_RESULTS") {
-        console.error("[geocoding] Google Maps devolvió:", data.status, data.error_message);
-      }
+      console.warn(
+        `[geocoding] Google Geocoding API respondió "${data.status}" para: "${direccion}"` +
+        (data.error_message ? ` — ${data.error_message}` : "")
+      );
       return null;
     }
 

@@ -41,8 +41,19 @@ export default function ZonaSelector() {
       setZonaEnvio(zonaBase);
       setZonaManual(zona.id);
       setEstado("encontrada");
+      console.info(`[ZonaSelector] ✓ Punto (${coords.lat}, ${coords.lng}) cayó dentro de "${zona.name}".`);
     } else {
       setEstado("no_encontrada");
+      // Diagnóstico: Google SÍ encontró la dirección (tenemos coordenadas),
+      // el problema es que ese punto no cae dentro de NINGÚN polígono activo.
+      // Con este link se puede verificar a simple vista en Google Maps si el
+      // punto está realmente en la zona de reparto o no, y compararlo contra
+      // el mapa de Zonas del panel para ver si falta ensanchar algún polígono.
+      console.warn(
+        `[ZonaSelector] Google encontró la dirección en (${coords.lat}, ${coords.lng}), ` +
+        `pero no cae dentro de ninguna de las ${zonas.length} zonas activas. ` +
+        `Verificar acá: https://www.google.com/maps?q=${coords.lat},${coords.lng}`
+      );
     }
   };
 
@@ -61,7 +72,16 @@ export default function ZonaSelector() {
     setEstado("buscando");
     debounceRef.current = setTimeout(async () => {
       const coords = await geocodificarDireccion(val);
-      if (!coords) { setEstado("no_encontrada"); return; }
+      if (!coords) {
+        setEstado("no_encontrada");
+        console.warn(
+          `[ZonaSelector] Google Maps NO pudo geocodificar la dirección "${val}". ` +
+          `Esto es distinto a "no hay zona ahí" — acá Google directamente no encontró ` +
+          `ninguna coincidencia. Revisar la consola arriba por si hay un error de la ` +
+          `Geocoding API (ej: REQUEST_DENIED, ZERO_RESULTS, falta de API key).`
+        );
+        return;
+      }
       resolverZonaPorCoords(coords);
     }, 800);
   };
